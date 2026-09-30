@@ -8,84 +8,63 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none" onclick="desbloquearAudioSilencioso()" onkeydown="desbloquearAudioSilencioso()">
 
-  <!-- ENCABEZADO INSTITUCIONAL -->
-  <header class="border-b border-slate-800 bg-slate-900/95 px-6 py-3 flex flex-wrap items-center justify-between gap-4 shadow-lg sticky top-0 z-40">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-lg bg-sky-600/20 border border-sky-500/40 flex items-center justify-center text-sky-400 text-xl font-bold">
-        🛡️️
+  <!-- ENCABEZADO INSTITUCIONAL DE GRAN TAMAÑO (PENSADO PARA TV) -->
+  <header class="border-b border-slate-800 bg-slate-900/95 px-8 py-4 flex flex-wrap items-center justify-between gap-6 shadow-2xl sticky top-0 z-40">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-sky-600/20 border-2 border-sky-500/50 flex items-center justify-center text-sky-400 text-3xl font-black shadow-lg">
+        🛡️
       </div>
       <div>
-        <h1 class="text-base font-black tracking-wider uppercase text-white drop-shadow-sm">CENTRO DE CONTROL Y MONITOREO C4</h1>
-        <p class="text-xs font-bold text-sky-300">DIRECCIÓN DE PREVENCIÓN SOCIAL DEL DELITO</p>
+        <h1 class="text-xl md:text-2xl font-black tracking-wider uppercase text-white drop-shadow-md">CENTRO DE CONTROL Y MONITOREO C4</h1>
+        <p class="text-sm md:text-base font-bold text-sky-300 tracking-wide">DIRECCIÓN DE PREVENCIÓN SOCIAL DEL DELITO</p>
       </div>
     </div>
 
-    <div class="flex items-center gap-3">
-      <div id="indicadorAudio" class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> SISTEMA DE VOZ C4 ACTIVO
+    <div class="flex items-center gap-4">
+      <div id="indicadorAudio" class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> SISTEMA DE VOZ C4 ACTIVO
       </div>
 
-      <div class="bg-slate-950 px-4 py-1.5 rounded-lg border border-slate-800 font-mono text-emerald-400 text-base font-black tracking-widest" id="relojDigital">
+      <!-- RELOJ DIGITAL GIGANTE -->
+      <div class="bg-slate-950 px-6 py-2 rounded-xl border-2 border-slate-800 font-mono text-emerald-400 text-2xl md:text-3xl font-black tracking-widest shadow-inner" id="relojDigital">
         --:--:--
       </div>
-      <a href="admin/login.html" class="bg-slate-800 hover:bg-slate-700 text-xs px-3.5 py-2 rounded-lg font-bold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-all shadow-md">
+
+      <a href="admin/login.html" class="bg-slate-800 hover:bg-slate-700 text-xs px-4 py-2.5 rounded-xl font-bold text-slate-200 border border-slate-700 flex items-center gap-2 transition-all shadow-md">
         <span>🔐</span> Admin
       </a>
     </div>
   </header>
 
-  <!-- BANNER ROJO CUANDO HAY OPERATIVO EN CURSO -->
-  <div id="bannerAlertaActiva" class="hidden bg-red-600 text-white px-6 py-2 border-b-2 border-red-400 flex items-center justify-between shadow-xl">
-    <div class="flex items-center gap-2">
-      <span class="w-3 h-3 rounded-full bg-white animate-ping"></span>
-      <span class="text-xs font-black tracking-widest uppercase">DESPLIEGUE OPERATIVO ACTIVO EN ESTE MOMENTO</span>
+  <!-- BANNER ROJO AMPLIADO DE OPERATIVO EN CURSO -->
+  <div id="bannerAlertaActiva" class="hidden bg-red-600 text-white px-8 py-3 border-b-4 border-red-400 flex items-center justify-between shadow-2xl animate-pulse">
+    <div class="flex items-center gap-3">
+      <span class="w-4 h-4 rounded-full bg-white animate-ping"></span>
+      <span class="text-sm md:text-base font-black tracking-widest uppercase drop-shadow">DESPLIEGUE OPERATIVO ACTIVO EN ESTE MOMENTO</span>
     </div>
-    <span id="conteoEnCursoBanner" class="text-xs font-black bg-black/40 px-2.5 py-0.5 rounded">0 OPERATIVOS</span>
+    <span id="conteoEnCursoBanner" class="text-sm font-black bg-black/50 border border-white/20 px-3 py-1 rounded-lg">0 OPERATIVOS</span>
   </div>
 
-  <!-- CONTENEDOR PRINCIPAL: OPERATIVOS ACTIVOS (IZQ) + BITÁCORA FINALIZADAS (DER) -->
-  <main class="flex-1 p-6 max-w-[1800px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <!-- CONTENEDOR PRINCIPAL: CONCLUIDAS (IZQ) Y ACTIVAS (DER) -->
+  <main class="flex-1 p-6 md:p-8 max-w-[1900px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-    <!-- ÁREA PRINCIPAL: EN CURSO Y PROGRAMADAS (8 COLUMNAS) -->
-    <div class="lg:col-span-8 xl:col-span-9 flex flex-col gap-5">
-      <div class="bg-slate-900/60 rounded-xl p-4 border border-slate-800 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 class="text-lg font-black text-white uppercase tracking-wider">
-            PROGRAMACIÓN OPERATIVA: <span id="textoDiaActual" class="text-sky-400 underline decoration-sky-500 decoration-2">HOY</span>
-          </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Despliegue operativo y preventivo asignado para el turno.</p>
-        </div>
-        <div class="flex items-center gap-3 text-xs font-black">
-          <span id="contadorTotalHoy" class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-200 font-mono">
-            ACTIVIDADES: 0
-          </span>
-          <span id="contadorEnVivoHoy" class="bg-red-950/80 border border-red-600/60 px-3 py-1.5 rounded-lg text-red-400 font-mono">
-            EN CURSO: 0
-          </span>
-        </div>
-      </div>
-
-      <!-- Cuadrícula de Operativos Activos -->
-      <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
-    </div>
-
-    <!-- COLUMNA LATERAL: ACTIVIDADES FINALIZADAS (ESTILO AGENDA / BITÁCORA LIMPIA) -->
+    <!-- COLUMNA IZQUIERDA: BITÁCORA DE CONCLUIDAS (3 COLUMNAS) -->
     <div class="lg:col-span-4 xl:col-span-3 flex flex-col">
-      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col h-full">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-2xl flex flex-col">
         
-        <!-- ENCABEZADO DE LA COLUMNA CON IDENTIDAD C4 -->
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <h3 class="text-xs font-black text-slate-200 uppercase tracking-wider">Bitácora de Concluidas</h3>
+        <!-- ENCABEZADO BITÁCORA -->
+        <div class="flex items-center justify-between pb-3.5 border-b border-slate-800 mb-4">
+          <div class="flex items-center gap-2.5">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+            <h3 class="text-sm font-black text-slate-100 uppercase tracking-wider">Bitácora Concluidas</h3>
           </div>
-          <span id="conteoConcluidas" class="text-[10px] font-mono font-bold bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
-            0 REGISTROS
+          <span id="conteoConcluidas" class="text-xs font-mono font-bold bg-slate-800 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700">
+            0 FINALIZADAS
           </span>
         </div>
 
-        <!-- LISTA CON FORMATO LIMPIO -->
-        <div id="listaFinalizadas" class="space-y-2.5 overflow-y-auto max-h-[75vh] pr-1 flex-1">
+        <!-- LISTA CONCLUIDAS -->
+        <div id="listaFinalizadas" class="space-y-3 overflow-y-auto max-h-[75vh] pr-1">
           <div class="py-16 text-center text-slate-500 text-xs">
             Sin actividades finalizadas en el turno.
           </div>
@@ -94,22 +73,47 @@
       </div>
     </div>
 
+    <!-- COLUMNA DERECHA: DESPLIEGUE OPERATIVO ACTIVO / PROGRAMADO (9 COLUMNAS) -->
+    <div class="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
+      
+      <!-- SUB-ENCABEZADO OPERATIVO -->
+      <div class="bg-slate-900/70 rounded-2xl p-5 border border-slate-800 flex flex-wrap items-center justify-between gap-4 shadow-xl">
+        <div>
+          <h2 class="text-xl md:text-2xl font-black text-white uppercase tracking-wider flex items-center gap-3">
+            PROGRAMACIÓN OPERATIVA: <span id="textoDiaActual" class="text-sky-400 underline decoration-sky-500 decoration-4">HOY</span>
+          </h2>
+          <p class="text-xs md:text-sm text-slate-400 mt-1">Despliegue operativo y preventivo asignado en tiempo real.</p>
+        </div>
+        <div class="flex items-center gap-3 font-black">
+          <span id="contadorTotalHoy" class="bg-slate-950 border border-slate-700 px-4 py-2 rounded-xl text-slate-200 font-mono text-sm shadow">
+            ACTIVIDADES: 0
+          </span>
+          <span id="contadorEnVivoHoy" class="bg-red-950/80 border-2 border-red-600/70 px-4 py-2 rounded-xl text-red-400 font-mono text-sm shadow animate-pulse">
+            EN CURSO: 0
+          </span>
+        </div>
+      </div>
+
+      <!-- CUADRÍCULA DE OPERATIVOS ACTIVOS -->
+      <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-6"></div>
+    </div>
+
   </main>
 
   <!-- MODAL FLOTANTE DE ALERTA ROJA (SE ABRE CADA 6 SEGUNDOS) -->
-  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-950 border-2 border-red-500 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative shadow-red-900/40">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-        <div class="flex items-center gap-2">
-          <span class="w-3.5 h-3.5 rounded-full bg-red-500 animate-ping"></span>
-          <h3 class="text-base font-black text-red-400 uppercase tracking-wider">🚨 ATENCIÓN C4: OPERATIVO EN CURSO</h3>
+  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-6">
+    <div class="bg-slate-950 border-4 border-red-500 rounded-3xl max-w-xl w-full p-8 shadow-2xl relative shadow-red-950/50">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
+        <div class="flex items-center gap-3">
+          <span class="w-4 h-4 rounded-full bg-red-500 animate-ping"></span>
+          <h3 class="text-lg md:text-xl font-black text-red-400 uppercase tracking-wider">🚨 ATENCIÓN C4: OPERATIVO EN CURSO</h3>
         </div>
-        <button onclick="pausarAlertaSeisSegundos()" class="text-xs bg-red-950 hover:bg-red-900 text-red-300 px-3 py-1.5 rounded-lg font-black border border-red-700/80 transition-all flex items-center gap-1">
-          <span>⏸</span> Minimizar (Reabre en 6s) [✕]
+        <button onclick="pausarAlertaSeisSegundos()" class="text-xs md:text-sm bg-red-950 hover:bg-red-900 text-red-300 px-3.5 py-2 rounded-xl font-black border border-red-700/80 transition-all flex items-center gap-1.5 shadow">
+          <span>⏸</span> Minimizar (6s) [✕]
         </button>
       </div>
 
-      <div id="contenedorAlertasModal" class="space-y-3 max-h-[55vh] overflow-y-auto pr-1"></div>
+      <div id="contenedorAlertasModal" class="space-y-4 max-h-[55vh] overflow-y-auto pr-1"></div>
     </div>
   </div>
 
@@ -214,7 +218,7 @@
         const data = await respuesta.json();
 
         if (!data || Object.keys(data).length === 0) {
-          grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500">No hay datos en Firebase.</div>`;
+          grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500 text-lg">No hay consignas registradas en Firebase.</div>`;
           badgeTotal.textContent = "ACTIVIDADES: 0";
           badgeEnCurso.textContent = "EN CURSO: 0";
           banner.classList.add('hidden');
@@ -254,63 +258,63 @@
 
           const esMismoDia = normalizar(act.dia) === diaHoyNorm;
 
-          // Si ya terminó el horario hoy -> Columna lateral tipo agenda
+          // SI YA CONCLUYÓ -> A LA COLUMNA IZQUIERDA
           if (esMismoDia && minutosActuales > minF) {
             totalFinalizadas++;
             finalizadasHtml += `
-              <div class="bg-slate-950/60 border border-slate-800/90 rounded-xl p-3 hover:border-slate-700 transition-all flex flex-col gap-1.5">
+              <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 hover:border-slate-700 transition-all flex flex-col gap-1.5 shadow">
                 <div class="flex items-center justify-between gap-2">
                   <div class="flex items-center gap-2">
-                    <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-[10px] font-black">✓</span>
-                    <span class="text-[11px] font-black tracking-wider text-emerald-400 uppercase">Concluida</span>
+                    <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-[11px] font-black">✓</span>
+                    <span class="text-xs font-black tracking-wider text-emerald-400 uppercase">Concluida</span>
                   </div>
-                  <span class="text-[11px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                  <span class="text-xs font-mono font-bold text-slate-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
                     ${act.inicio} - ${act.fin}
                   </span>
                 </div>
-                <h4 class="text-xs font-bold text-slate-200 uppercase truncate mt-0.5">${act.nombre}</h4>
-                <p class="text-[11px] text-slate-400 line-clamp-1 leading-snug">${act.descripcion}</p>
+                <h4 class="text-sm font-black text-slate-200 uppercase truncate mt-0.5">${act.nombre}</h4>
+                <p class="text-xs text-slate-400 line-clamp-1 leading-snug">${act.descripcion}</p>
               </div>
             `;
           } else {
-            // Operativos En Curso o Programados
+            // OPERATIVOS ACTIVOS O POR INICIAR -> COLUMNA DERECHA PRINCIPAL
             let estado = 'PROGRAMADO';
             let borderStyle = 'border-slate-800 bg-slate-900/80';
             let badgeStyle = 'bg-slate-800 text-slate-400 border border-slate-700';
 
             if (esMismoDia && minutosActuales >= minI && minutosActuales <= minF) {
               estado = 'EN CURSO';
-              borderStyle = 'border-emerald-500 bg-slate-900 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/50';
+              borderStyle = 'border-2 border-emerald-500 bg-slate-900 shadow-2xl shadow-emerald-500/10 ring-2 ring-emerald-500/40';
               badgeStyle = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 animate-pulse font-black';
               enCursoCount++;
               listaEnCurso.push(act);
             }
 
             cardsHtml += `
-              <div class="rounded-2xl p-5 border ${borderStyle} flex flex-col justify-between transition-all min-h-[160px]">
+              <div class="rounded-2xl p-6 border ${borderStyle} flex flex-col justify-between transition-all min-h-[190px] shadow-lg">
                 <div>
-                  <div class="flex items-center justify-between gap-2 mb-3">
+                  <div class="flex items-center justify-between gap-3 mb-4">
                     <div class="flex items-center gap-2">
-                      <span class="text-xs font-mono font-bold text-sky-400 bg-sky-950/70 px-3 py-1 rounded-lg border border-sky-800/50">
+                      <span class="text-sm font-mono font-black text-sky-400 bg-sky-950/80 px-3.5 py-1 rounded-xl border border-sky-800/60 shadow">
                         🕒 ${act.inicio} - ${act.fin}
                       </span>
-                      <span class="text-[11px] font-bold text-slate-300 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                      <span class="text-xs font-bold text-slate-300 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
                         ${act.dia}
                       </span>
                     </div>
-                    <span class="text-[10px] uppercase px-2.5 py-1 rounded-md ${badgeStyle}">
+                    <span class="text-xs uppercase px-3 py-1 rounded-lg font-black tracking-wider ${badgeStyle}">
                       ${estado}
                     </span>
                   </div>
-                  <h3 class="text-base font-black text-white uppercase tracking-wide mb-1.5">${act.nombre}</h3>
-                  <p class="text-xs text-slate-300 leading-relaxed">${act.descripcion}</p>
+                  <h3 class="text-xl font-black text-white uppercase tracking-wide mb-2">${act.nombre}</h3>
+                  <p class="text-sm text-slate-300 leading-relaxed">${act.descripcion}</p>
                 </div>
               </div>
             `;
           }
         });
 
-        grid.innerHTML = cardsHtml || `<div class="col-span-full py-12 text-center text-slate-500">No hay operativos pendientes ni en curso.</div>`;
+        grid.innerHTML = cardsHtml || `<div class="col-span-full py-16 text-center text-slate-500 text-base">No hay operativos pendientes ni en curso.</div>`;
         
         if (totalFinalizadas > 0) {
           listaFin.innerHTML = finalizadasHtml;
@@ -322,7 +326,7 @@
         badgeTotal.textContent = `ACTIVIDADES: ${actividadesDelDia.length}`;
         badgeEnCurso.textContent = `EN CURSO: ${enCursoCount}`;
 
-        // Control de Alerta y Reapertura cada 6 Segundos
+        // Alerta Emergente y Voz C4
         if (listaEnCurso.length > 0) {
           banner.classList.remove('hidden');
           conteoBanner.textContent = `${listaEnCurso.length} OPERATIVO(S) ACTIVO(S)`;
@@ -330,13 +334,13 @@
           if (Date.now() >= pausaTemporalHasta) {
             modal.classList.remove('hidden');
             contModal.innerHTML = listaEnCurso.map(a => `
-              <div class="p-3 bg-red-950/40 border border-red-500/50 rounded-xl">
-                <div class="flex justify-between items-center text-xs font-bold text-red-300 mb-1">
-                  <span>🕒 Horario: ${a.inicio} - ${a.fin}</span>
-                  <span class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-black">ACTIVO</span>
+              <div class="p-4 bg-red-950/40 border-2 border-red-500/60 rounded-2xl shadow">
+                <div class="flex justify-between items-center text-sm font-bold text-red-300 mb-1.5">
+                  <span class="font-mono">🕒 Horario: ${a.inicio} - ${a.fin}</span>
+                  <span class="bg-red-600 text-white text-xs px-2.5 py-0.5 rounded font-black tracking-wider">ACTIVO</span>
                 </div>
-                <h4 class="text-base font-black text-white uppercase">${a.nombre}</h4>
-                <p class="text-xs text-slate-300 mt-1">${a.descripcion}</p>
+                <h4 class="text-lg font-black text-white uppercase">${a.nombre}</h4>
+                <p class="text-sm text-slate-300 mt-1">${a.descripcion}</p>
               </div>
             `).join('');
 
