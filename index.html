@@ -4,7 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>C4 Monitoreo • Prevención Social del Delito</title>
+  
+  <!-- TIPOGRAFÍA DE ALTA LEGIBILIDAD PARA PANTALLAS Y TV -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
   <style>
     @keyframes entradaGlass {
       0% { opacity: 0; transform: scale(0.96); }
@@ -20,7 +38,7 @@
   <!-- ENCABEZADO INSTITUCIONAL -->
   <header class="border-b border-slate-800 bg-slate-900/95 px-8 py-4 flex flex-wrap items-center justify-between gap-6 shadow-2xl sticky top-0 z-40">
     <div class="flex items-center gap-4">
-      <div class="w-14 h-14 rounded-2xl bg-slate-900/90 border-2 border-sky-500/50 p-1.5 flex items-center justify-center shadow-lg overflow-hidden">
+      <div class="w-16 h-16 rounded-2xl bg-slate-900/90 border-2 border-sky-500/50 p-2 flex items-center justify-center shadow-lg overflow-hidden">
         <img src="logo.png" 
              onerror="this.onerror=null; this.src='logo.jpg'; this.onerror=function(){this.src='logo.jpeg'; this.onerror=function(){this.src='logo.PNG';}};" 
              alt="Logo C4" 
@@ -57,14 +75,14 @@
   </div>
 
   <!-- CONTENEDOR PRINCIPAL: CONCLUIDAS (IZQUIERDA) Y ACTIVAS (DERECHA) -->
-  <main class="flex-1 p-6 md:p-8 max-w-[1900px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+  <main class="flex-1 p-6 md:p-8 max-w-[1920px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
     <!-- COLUMNA IZQUIERDA: BITÁCORA DE CONCLUIDAS -->
     <div class="lg:col-span-4 xl:col-span-3 flex flex-col">
       <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-2xl flex flex-col">
         <div class="flex items-center justify-between pb-3.5 border-b border-slate-800 mb-4">
           <div class="flex items-center gap-2.5">
-            <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+            <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
             <h3 class="text-sm font-black text-slate-100 uppercase tracking-wider">Bitácora Concluidas</h3>
           </div>
           <span id="conteoConcluidas" class="text-xs font-mono font-bold bg-slate-800 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700">
@@ -72,8 +90,8 @@
           </span>
         </div>
 
-        <div id="listaFinalizadas" class="space-y-3 overflow-y-auto max-h-[75vh] pr-1">
-          <div class="py-16 text-center text-slate-500 text-xs">
+        <div id="listaFinalizadas" class="space-y-3.5 overflow-y-auto max-h-[75vh] pr-1">
+          <div class="py-16 text-center text-slate-500 text-sm">
             Sin actividades finalizadas en el turno.
           </div>
         </div>
@@ -87,7 +105,7 @@
           <h2 class="text-xl md:text-2xl font-black text-white uppercase tracking-wider flex items-center gap-3">
             PROGRAMACIÓN OPERATIVA: <span id="textoDiaActual" class="text-sky-400 underline decoration-sky-500 decoration-4">HOY</span>
           </h2>
-          <p class="text-xs md:text-sm text-slate-400 mt-1">Despliegue asignado en tiempo real. Cierre manual disponible.</p>
+          <p class="text-xs md:text-sm text-slate-400 mt-1 font-medium">Despliegue asignado en tiempo real. Cierre manual disponible.</p>
         </div>
         <div class="flex items-center gap-3 font-black">
           <span id="contadorTotalHoy" class="bg-slate-950 border border-slate-700 px-4 py-2 rounded-xl text-slate-200 font-mono text-sm shadow">
@@ -104,24 +122,24 @@
 
   </main>
 
-  <!-- MODAL TRANSLÚCIDO AMPLIO EN COLUMNAS MÚLTIPLES (REABRE CADA 1 MINUTO) -->
-  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md flex items-center justify-center p-4 md:p-8 transition-all duration-300">
-    <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl max-w-6xl xl:max-w-7xl w-full p-6 md:p-8 shadow-2xl relative backdrop-blur-xl flex flex-col max-h-[90vh]">
+  <!-- MODAL TRANSLÚCIDO AMPLIO CON LETRAS GRANDES Y ALTA VISIBILIDAD -->
+  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 md:p-8 transition-all duration-300">
+    <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl max-w-7xl w-full p-6 md:p-8 shadow-2xl relative backdrop-blur-xl flex flex-col max-h-[92vh]">
       
       <!-- ENCABEZADO MODAL -->
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5 flex-shrink-0">
-        <div class="flex items-center gap-3">
-          <span class="w-3.5 h-3.5 rounded-full bg-amber-400 animate-ping"></span>
-          <h3 class="text-base md:text-xl font-black text-white uppercase tracking-wider">MONITOR DE ESTADO OPERATIVO C4</h3>
-          <span id="badgeTotalEmergentes" class="text-xs font-mono font-bold bg-slate-800 text-sky-300 px-2.5 py-0.5 rounded-lg border border-slate-700">0 EVENTOS</span>
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6 flex-shrink-0">
+        <div class="flex items-center gap-3.5">
+          <span class="w-4 h-4 rounded-full bg-amber-400 animate-ping"></span>
+          <h3 class="text-lg md:text-2xl font-black text-white uppercase tracking-wider">MONITOR DE ESTADO OPERATIVO C4</h3>
+          <span id="badgeTotalEmergentes" class="text-xs md:text-sm font-mono font-black bg-slate-800 text-sky-300 px-3 py-1 rounded-xl border border-slate-700">0 EVENTOS</span>
         </div>
-        <button onclick="pausarAlertaUnMinuto()" class="text-xs md:text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl font-black border border-slate-700 transition-all flex items-center gap-1.5 shadow">
+        <button onclick="pausarAlertaUnMinuto()" class="text-xs md:text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-black border border-slate-700 transition-all flex items-center gap-2 shadow">
           <span>⏸</span> Minimizar (Reabre en 1 min) [✕]
         </button>
       </div>
 
-      <!-- CONTENEDOR EN CUADRÍCULA DINÁMICA DE 2 O 3 COLUMNAS -->
-      <div id="contenedorAlertasModal" class="overflow-y-auto pr-1 flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-max"></div>
+      <!-- CONTENEDOR EN CUADRÍCULA DE COLUMNAS CON TEXTO GRANDE -->
+      <div id="contenedorAlertasModal" class="overflow-y-auto pr-2 flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 auto-rows-max"></div>
     </div>
   </div>
 
@@ -311,22 +329,22 @@
             const textoHoraFin = act.horaCierreReal ? `Cerrada: ${act.horaCierreReal}` : `${act.inicio} - ${act.fin}`;
 
             finalizadasHtml += `
-              <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 hover:border-slate-700 transition-all flex flex-col gap-1.5 shadow">
+              <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 hover:border-slate-700 transition-all flex flex-col gap-2 shadow">
                 <div class="flex items-center justify-between gap-2">
                   <div class="flex items-center gap-2">
-                    <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-[11px] font-black">✓</span>
+                    <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-xs font-black">✓</span>
                     <span class="text-xs font-black tracking-wider text-emerald-400 uppercase">Concluida</span>
                   </div>
-                  <span class="text-xs font-mono font-bold text-slate-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                  <span class="text-xs font-mono font-bold text-slate-300 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">
                     ${textoHoraFin}
                   </span>
                 </div>
-                <h4 class="text-sm font-black text-slate-200 uppercase truncate mt-0.5">${act.nombre}</h4>
-                <p class="text-xs text-slate-400 line-clamp-1 leading-snug">${act.descripcion}</p>
+                <h4 class="text-base font-black text-slate-100 uppercase truncate mt-0.5">${act.nombre}</h4>
+                <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">${act.descripcion}</p>
               </div>
             `;
 
-            // REGLA ROJA: Mostrar durante 15 minutos posteriores
+            // REGLA ROJA (FINALIZADA): Mostrar durante 15 minutos posteriores
             let tiempoDesdeCierreMs = 0;
             if (act.timestampCierre) {
               tiempoDesdeCierreMs = msActuales - act.timestampCierre;
@@ -377,14 +395,14 @@
               tarjetasEmergentes.push({
                 color: 'amarillo',
                 tituloBadge: `INICIA EN ${minutosFaltantesParaIniciar} MIN`,
-                tiempoTexto: `🕒 ${act.inicio} - ${act.fin}`,
+                tiempoTexto: `🕒 Programado: ${act.inicio} - ${act.fin}`,
                 nombre: act.nombre,
                 descripcion: act.descripcion
               });
             }
 
             cardsHtml += `
-              <div class="rounded-2xl p-6 border ${borderStyle} flex flex-col justify-between transition-all min-h-[200px] shadow-lg">
+              <div class="rounded-3xl p-6 border ${borderStyle} flex flex-col justify-between transition-all min-h-[220px] shadow-lg">
                 <div>
                   <div class="flex items-center justify-between gap-3 mb-4">
                     <div class="flex items-center gap-2">
@@ -399,12 +417,12 @@
                       ${estado}
                     </span>
                   </div>
-                  <h3 class="text-xl font-black text-white uppercase tracking-wide mb-2">${act.nombre}</h3>
-                  <p class="text-sm text-slate-300 leading-relaxed mb-4">${act.descripcion}</p>
+                  <h3 class="text-xl md:text-2xl font-black text-white uppercase tracking-wide mb-2.5">${act.nombre}</h3>
+                  <p class="text-sm md:text-base text-slate-300 leading-relaxed mb-4">${act.descripcion}</p>
                 </div>
 
-                <div class="pt-3 border-t border-slate-800/80 flex justify-end">
-                  <button onclick="cerrarActividadManual('${act.id}', '${act.nombre}')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white px-3.5 py-1.5 rounded-xl font-bold text-xs border border-slate-700 hover:border-emerald-500 transition-all flex items-center gap-1.5 shadow">
+                <div class="pt-3.5 border-t border-slate-800/80 flex justify-end">
+                  <button onclick="cerrarActividadManual('${act.id}', '${act.nombre}')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white px-4 py-2 rounded-xl font-black text-xs border border-slate-700 hover:border-emerald-500 transition-all flex items-center gap-1.5 shadow">
                     <span>✓</span> Concluir / Cerrar
                   </button>
                 </div>
@@ -418,7 +436,7 @@
         if (totalFinalizadas > 0) {
           listaFin.innerHTML = finalizadasHtml;
         } else {
-          listaFin.innerHTML = `<div class="py-16 text-center text-slate-500 text-xs">Sin actividades finalizadas en el turno.</div>`;
+          listaFin.innerHTML = `<div class="py-16 text-center text-slate-500 text-sm">Sin actividades finalizadas en el turno.</div>`;
         }
         conteoFin.textContent = `${totalFinalizadas} FINALIZADAS`;
 
@@ -442,7 +460,7 @@
           banner.classList.add('hidden');
         }
 
-        // VENTANA EMERGENTE DISTRIBUIDA EN COLUMNAS
+        // VENTANA EMERGENTE: LETRAS GRANDES Y ALTA LEGIBILIDAD
         if (tarjetasEmergentes.length > 0) {
           badgeTotalEmergentes.textContent = `${tarjetasEmergentes.length} EVENTOS`;
 
@@ -452,38 +470,38 @@
             contModal.innerHTML = tarjetasEmergentes.map(t => {
               if (t.color === 'verde') {
                 return `
-                  <div class="p-4 bg-emerald-950/70 border-2 border-emerald-500/80 rounded-2xl shadow-lg flex flex-col justify-between">
+                  <div class="p-5 bg-emerald-950/80 border-2 border-emerald-500 rounded-3xl shadow-xl flex flex-col justify-between">
                     <div>
-                      <div class="flex justify-between items-center text-xs font-bold text-emerald-300 mb-2 gap-2">
-                        <span class="font-mono bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/80">${t.tiempoTexto}</span>
-                        <span class="bg-emerald-600 text-white text-[10px] px-2.5 py-0.5 rounded font-black tracking-wider flex-shrink-0">🟢 ${t.tituloBadge}</span>
+                      <div class="flex justify-between items-center text-xs md:text-sm font-black text-emerald-300 mb-3 gap-2">
+                        <span class="font-mono bg-emerald-950 px-3 py-1 rounded-xl border border-emerald-700/80">${t.tiempoTexto}</span>
+                        <span class="bg-emerald-600 text-white text-xs px-3 py-1 rounded-xl font-black tracking-wider flex-shrink-0 shadow">🟢 ${t.tituloBadge}</span>
                       </div>
-                      <h4 class="text-base font-black text-white uppercase mb-1">${t.nombre}</h4>
-                      <p class="text-xs text-slate-300 leading-relaxed">${t.descripcion}</p>
+                      <h4 class="text-xl md:text-2xl font-black text-white uppercase mb-2 tracking-wide">${t.nombre}</h4>
+                      <p class="text-sm md:text-base text-slate-200 leading-relaxed font-normal">${t.descripcion}</p>
                     </div>
                   </div>`;
               } else if (t.color === 'amarillo') {
                 return `
-                  <div class="p-4 bg-amber-950/70 border-2 border-amber-500/80 rounded-2xl shadow-lg flex flex-col justify-between">
+                  <div class="p-5 bg-amber-950/80 border-2 border-amber-500 rounded-3xl shadow-xl flex flex-col justify-between">
                     <div>
-                      <div class="flex justify-between items-center text-xs font-bold text-amber-300 mb-2 gap-2">
-                        <span class="font-mono bg-amber-950 px-2 py-0.5 rounded border border-amber-800/80">${t.tiempoTexto}</span>
-                        <span class="bg-amber-500 text-slate-950 text-[10px] px-2.5 py-0.5 rounded font-black tracking-wider flex-shrink-0">🟡 ${t.tituloBadge}</span>
+                      <div class="flex justify-between items-center text-xs md:text-sm font-black text-amber-300 mb-3 gap-2">
+                        <span class="font-mono bg-amber-950 px-3 py-1 rounded-xl border border-amber-700/80">${t.tiempoTexto}</span>
+                        <span class="bg-amber-500 text-slate-950 text-xs px-3 py-1 rounded-xl font-black tracking-wider flex-shrink-0 shadow">🟡 ${t.tituloBadge}</span>
                       </div>
-                      <h4 class="text-base font-black text-white uppercase mb-1">${t.nombre}</h4>
-                      <p class="text-xs text-slate-300 leading-relaxed">${t.descripcion}</p>
+                      <h4 class="text-xl md:text-2xl font-black text-white uppercase mb-2 tracking-wide">${t.nombre}</h4>
+                      <p class="text-sm md:text-base text-slate-200 leading-relaxed font-normal">${t.descripcion}</p>
                     </div>
                   </div>`;
               } else {
                 return `
-                  <div class="p-4 bg-red-950/70 border-2 border-red-500/80 rounded-2xl shadow-lg flex flex-col justify-between">
+                  <div class="p-5 bg-red-950/80 border-2 border-red-500 rounded-3xl shadow-xl flex flex-col justify-between">
                     <div>
-                      <div class="flex justify-between items-center text-xs font-bold text-red-300 mb-2 gap-2">
-                        <span class="font-mono bg-red-950 px-2 py-0.5 rounded border border-red-800/80">${t.tiempoTexto}</span>
-                        <span class="bg-red-600 text-white text-[10px] px-2.5 py-0.5 rounded font-black tracking-wider flex-shrink-0">🔴 ${t.tituloBadge}</span>
+                      <div class="flex justify-between items-center text-xs md:text-sm font-black text-red-300 mb-3 gap-2">
+                        <span class="font-mono bg-red-950 px-3 py-1 rounded-xl border border-red-700/80">${t.tiempoTexto}</span>
+                        <span class="bg-red-600 text-white text-xs px-3 py-1 rounded-xl font-black tracking-wider flex-shrink-0 shadow">🔴 ${t.tituloBadge}</span>
                       </div>
-                      <h4 class="text-base font-black text-white uppercase mb-1">${t.nombre}</h4>
-                      <p class="text-xs text-slate-300 leading-relaxed">${t.descripcion}</p>
+                      <h4 class="text-xl md:text-2xl font-black text-white uppercase mb-2 tracking-wide">${t.nombre}</h4>
+                      <p class="text-sm md:text-base text-slate-200 leading-relaxed font-normal">${t.descripcion}</p>
                     </div>
                   </div>`;
               }
