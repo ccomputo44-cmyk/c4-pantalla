@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>C4 Monitoreo • Prevención Social del Delito</title>
   
-  <!-- TIPOGRAFÍA DE ALTA LEGIBILIDAD PARA PANTALLAS Y TV -->
+  <!-- TIPOGRAFÍA INSTITUCIONAL DE ALTA VISIBILIDAD -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
@@ -25,18 +25,31 @@
   </script>
   <style>
     @keyframes entradaGlass {
-      0% { opacity: 0; transform: scale(0.96); }
+      0% { opacity: 0; transform: scale(0.97); }
       100% { opacity: 1; transform: scale(1); }
     }
     .modal-animado {
-      animation: entradaGlass 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: entradaGlass 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    /* Estilización sutil del scrollbar en caso de sobrecupo */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.5);
+      border-radius: 8px;
     }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none" onclick="desbloquearAudioSilencioso()" onkeydown="desbloquearAudioSilencioso()">
 
   <!-- ENCABEZADO INSTITUCIONAL -->
-  <header class="border-b border-slate-800 bg-slate-900/95 px-8 py-4 flex flex-wrap items-center justify-between gap-6 shadow-2xl sticky top-0 z-40">
+  <header class="border-b border-slate-800 bg-slate-900/95 px-8 py-3.5 flex flex-wrap items-center justify-between gap-6 shadow-2xl sticky top-0 z-40">
     <div class="flex items-center gap-4">
       <div class="w-16 h-16 rounded-2xl bg-slate-900/90 border-2 border-sky-500/50 p-2 flex items-center justify-center shadow-lg overflow-hidden">
         <img src="logo.png" 
@@ -122,24 +135,24 @@
 
   </main>
 
-  <!-- MODAL TRANSLÚCIDO AMPLIO CON LETRAS GRANDES Y ALTA VISIBILIDAD -->
-  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 md:p-8 transition-all duration-300">
-    <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl max-w-7xl w-full p-6 md:p-8 shadow-2xl relative backdrop-blur-xl flex flex-col max-h-[92vh]">
+  <!-- MODAL TRANSLÚCIDO EXTRA PANORÁMICO (96% ANCHO Y HASTA 4 COLUMNAS) -->
+  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-3 md:p-6 transition-all duration-300">
+    <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl w-[96vw] max-w-[1850px] p-5 md:p-7 shadow-2xl relative backdrop-blur-xl flex flex-col max-h-[92vh]">
       
       <!-- ENCABEZADO MODAL -->
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6 flex-shrink-0">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3.5 mb-5 flex-shrink-0">
         <div class="flex items-center gap-3.5">
           <span class="w-4 h-4 rounded-full bg-amber-400 animate-ping"></span>
           <h3 class="text-lg md:text-2xl font-black text-white uppercase tracking-wider">MONITOR DE ESTADO OPERATIVO C4</h3>
           <span id="badgeTotalEmergentes" class="text-xs md:text-sm font-mono font-black bg-slate-800 text-sky-300 px-3 py-1 rounded-xl border border-slate-700">0 EVENTOS</span>
         </div>
-        <button onclick="pausarAlertaUnMinuto()" class="text-xs md:text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-black border border-slate-700 transition-all flex items-center gap-2 shadow">
+        <button onclick="pausarAlertaUnMinuto()" class="text-xs md:text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-2.5 rounded-xl font-black border border-slate-700 transition-all flex items-center gap-2 shadow">
           <span>⏸</span> Minimizar (Reabre en 1 min) [✕]
         </button>
       </div>
 
-      <!-- CONTENEDOR EN CUADRÍCULA DE COLUMNAS CON TEXTO GRANDE -->
-      <div id="contenedorAlertasModal" class="overflow-y-auto pr-2 flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 auto-rows-max"></div>
+      <!-- CONTENEDOR PANORÁMICO: 4 COLUMNAS EN PANTALLA ANCHA PARA EVITAR SCROLL -->
+      <div id="contenedorAlertasModal" class="overflow-y-auto pr-1 flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-max"></div>
     </div>
   </div>
 
@@ -460,7 +473,7 @@
           banner.classList.add('hidden');
         }
 
-        // VENTANA EMERGENTE: LETRAS GRANDES Y ALTA LEGIBILIDAD
+        // VENTANA EMERGENTE PANORÁMICA DE ALTA LEGIBILIDAD
         if (tarjetasEmergentes.length > 0) {
           badgeTotalEmergentes.textContent = `${tarjetasEmergentes.length} EVENTOS`;
 
@@ -470,38 +483,38 @@
             contModal.innerHTML = tarjetasEmergentes.map(t => {
               if (t.color === 'verde') {
                 return `
-                  <div class="p-5 bg-emerald-950/80 border-2 border-emerald-500 rounded-3xl shadow-xl flex flex-col justify-between">
+                  <div class="p-5 bg-emerald-950/85 border-2 border-emerald-500 rounded-3xl shadow-xl flex flex-col justify-between hover:border-emerald-400 transition-all">
                     <div>
                       <div class="flex justify-between items-center text-xs md:text-sm font-black text-emerald-300 mb-3 gap-2">
-                        <span class="font-mono bg-emerald-950 px-3 py-1 rounded-xl border border-emerald-700/80">${t.tiempoTexto}</span>
+                        <span class="font-mono bg-emerald-950 px-3 py-1 rounded-xl border border-emerald-700/80 shadow-sm">${t.tiempoTexto}</span>
                         <span class="bg-emerald-600 text-white text-xs px-3 py-1 rounded-xl font-black tracking-wider flex-shrink-0 shadow">🟢 ${t.tituloBadge}</span>
                       </div>
                       <h4 class="text-xl md:text-2xl font-black text-white uppercase mb-2 tracking-wide">${t.nombre}</h4>
-                      <p class="text-sm md:text-base text-slate-200 leading-relaxed font-normal">${t.descripcion}</p>
+                      <p class="text-sm md:text-base text-slate-100 leading-relaxed font-semibold line-clamp-4">${t.descripcion}</p>
                     </div>
                   </div>`;
               } else if (t.color === 'amarillo') {
                 return `
-                  <div class="p-5 bg-amber-950/80 border-2 border-amber-500 rounded-3xl shadow-xl flex flex-col justify-between">
+                  <div class="p-5 bg-amber-950/85 border-2 border-amber-500 rounded-3xl shadow-xl flex flex-col justify-between hover:border-amber-400 transition-all">
                     <div>
                       <div class="flex justify-between items-center text-xs md:text-sm font-black text-amber-300 mb-3 gap-2">
-                        <span class="font-mono bg-amber-950 px-3 py-1 rounded-xl border border-amber-700/80">${t.tiempoTexto}</span>
+                        <span class="font-mono bg-amber-950 px-3 py-1 rounded-xl border border-amber-700/80 shadow-sm">${t.tiempoTexto}</span>
                         <span class="bg-amber-500 text-slate-950 text-xs px-3 py-1 rounded-xl font-black tracking-wider flex-shrink-0 shadow">🟡 ${t.tituloBadge}</span>
                       </div>
                       <h4 class="text-xl md:text-2xl font-black text-white uppercase mb-2 tracking-wide">${t.nombre}</h4>
-                      <p class="text-sm md:text-base text-slate-200 leading-relaxed font-normal">${t.descripcion}</p>
+                      <p class="text-sm md:text-base text-slate-100 leading-relaxed font-semibold line-clamp-4">${t.descripcion}</p>
                     </div>
                   </div>`;
               } else {
                 return `
-                  <div class="p-5 bg-red-950/80 border-2 border-red-500 rounded-3xl shadow-xl flex flex-col justify-between">
+                  <div class="p-5 bg-red-950/85 border-2 border-red-500 rounded-3xl shadow-xl flex flex-col justify-between hover:border-red-400 transition-all">
                     <div>
                       <div class="flex justify-between items-center text-xs md:text-sm font-black text-red-300 mb-3 gap-2">
-                        <span class="font-mono bg-red-950 px-3 py-1 rounded-xl border border-red-700/80">${t.tiempoTexto}</span>
+                        <span class="font-mono bg-red-950 px-3 py-1 rounded-xl border border-red-700/80 shadow-sm">${t.tiempoTexto}</span>
                         <span class="bg-red-600 text-white text-xs px-3 py-1 rounded-xl font-black tracking-wider flex-shrink-0 shadow">🔴 ${t.tituloBadge}</span>
                       </div>
                       <h4 class="text-xl md:text-2xl font-black text-white uppercase mb-2 tracking-wide">${t.nombre}</h4>
-                      <p class="text-sm md:text-base text-slate-200 leading-relaxed font-normal">${t.descripcion}</p>
+                      <p class="text-sm md:text-base text-slate-100 leading-relaxed font-semibold line-clamp-4">${t.descripcion}</p>
                     </div>
                   </div>`;
               }
