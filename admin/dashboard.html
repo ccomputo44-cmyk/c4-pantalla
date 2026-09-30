@@ -51,73 +51,6 @@
               <option value="Miércoles">Miércoles</option>
               <option value="Jueves">Jueves</option>
               <option value="Viernes">Viernes</option>
-              <option valueAquí tienes el código completo de **`admin/dashboard.html`** con el botón de purga general integrado.
-
-### Novedades añadidas:
-1. **Botón de Borrado Masivo:** Se colocó junto a la tabla de actividades con color rojo táctico (`🗑️ BORRAR TODAS LAS ACTIVIDADES`).
-2. **Doble Confirmación de Seguridad:** Para evitar accidentes, solicita confirmar con cuadro de diálogo y escribir la palabra **"BORRAR"** para ejecutar la limpieza.
-3. **Limpieza integral en Firebase:** Elimina simultáneamente los registros de actividades (`/actividades.json`) y, opcionalmente, resetea la bitácora para dejar la pantalla de monitoreo limpia desde cero.
-
----
-
-### Código Completo para `admin/dashboard.html`
-
-Reemplaza todo el contenido de **`admin/dashboard.html`** con este código:
-
-```html
-<!DOCTYPE html>
-<html lang="es" class="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Módulo de Gestión y Captura C4</title>
-  <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none">
-
-  <!-- ENCABEZADO PANEL DE GESTIÓN -->
-  <header class="border-b border-slate-800 bg-slate-900/95 px-6 py-3.5 flex items-center justify-between gap-4 shadow-lg sticky top-0 z-40">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-slate-950 border border-sky-500/40 p-1 flex items-center justify-center overflow-hidden">
-        <img src="../logo.png" 
-             onerror="this.onerror=null; this.src='../logo.jpg'; this.onerror=function(){this.src='../logo.jpeg'; this.onerror=function(){this.src='../logo.PNG';}};" 
-             alt="Logo C4" 
-             class="w-full h-full object-contain">
-      </div>
-      <div>
-        <h1 class="text-sm md:text-base font-black uppercase tracking-wider text-white">MÓDULO DE GESTIÓN Y CAPTURA C4</h1>
-        <p class="text-xs text-sky-400 font-bold">Panel Administrativo de Consignas y Bitácora</p>
-      </div>
-    </div>
-
-    <div class="flex items-center gap-3">
-      <a href="../index.html" class="bg-slate-800 hover:bg-slate-700 text-xs px-3.5 py-2 rounded-xl font-bold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-all shadow">
-        <span>📺</span> Ver Monitor de TV
-      </a>
-      <button onclick="cerrarSesion()" class="bg-red-950 hover:bg-red-900 text-xs px-3.5 py-2 rounded-xl font-bold text-red-300 border border-red-700/80 transition-all shadow">
-        Cerrar Sesión
-      </button>
-    </div>
-  </header>
-
-  <main class="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
-
-    <!-- FORMULARIO DE CAPTURA MANUAL -->
-    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
-      <h2 class="text-base font-black text-white uppercase tracking-wider mb-5 flex items-center gap-2">
-        <span>📋</span> CAPTURA MANUAL DE DESPLIEGUE OPERATIVO
-      </h2>
-
-      <form onsubmit="guardarActividad(event)" class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Día de la Semana</label>
-            <select id="inputDia" required class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
-              <option value="Lunes">Lunes</option>
-              <option value="Martes">Martes</option>
-              <option value="Miércoles">Miércoles</option>
-              <option value="Jueves">Jueves</option>
-              <option value="Viernes">Viernes</option>
               <option value="Sábado">Sábado</option>
               <option value="Domingo">Domingo</option>
             </select>
@@ -152,18 +85,11 @@ Reemplaza todo el contenido de **`admin/dashboard.html`** con este código:
       </form>
     </div>
 
-    <!-- TABLA DE ACTIVIDADES PROGRAMADAS CON BOTÓN DE PURGA -->
-    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-3">
-        <h3 class="text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
-          <span>📅</span> ACTIVIDADES PROGRAMADAS EN EL CALENDARIO
-        </h3>
-
-        <!-- BOTÓN PARA ELIMINAR TODOS LOS REGISTROS -->
-        <button type="button" onclick="borrarTodasLasActividades()" id="btnBorrarTodo" class="bg-red-950 hover:bg-red-800 text-red-200 hover:text-white border border-red-700/80 font-black text-xs uppercase tracking-wider px-4 py-2 rounded-xl transition-all shadow-md flex items-center gap-2">
-          <span>🗑️</span> BORRAR TODOS LOS REGISTROS
-        </button>
-      </div>
+    <!-- TABLA DE ACTIVIDADES PROGRAMADAS -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
+      <h3 class="text-base font-black text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+        <span>📅</span> ACTIVIDADES PROGRAMADAS EN EL CALENDARIO
+      </h3>
 
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs">
@@ -233,7 +159,7 @@ Reemplaza todo el contenido de **`admin/dashboard.html`** con este código:
   </main>
 
   <script>
-    const URL_FIREBASE = "[https://c4-monitoreo-8d236-default-rtdb.firebaseio.com](https://c4-monitoreo-8d236-default-rtdb.firebaseio.com)";
+    const URL_FIREBASE = "https://c4-monitoreo-8d236-default-rtdb.firebaseio.com";
 
     if (!sessionStorage.getItem('c4_autenticado')) {
       window.location.href = 'login.html';
@@ -339,33 +265,7 @@ Reemplaza todo el contenido de **`admin/dashboard.html`** con este código:
       }
     }
 
-    // FUNCIÓN DE BORRADO MASIVO AUTOMÁTICO DE REGISTROS
-    async function borrarTodasLasActividades() {
-      const respuesta = prompt("⚠️ ACCIÓN CRÍTICA:\nEsta acción eliminará de forma irreversible TODAS las actividades y consignas registradas en la base de datos.\n\nPara confirmar, escribe la palabra: BORRAR");
-
-      if (respuesta !== "BORRAR") {
-        if (respuesta !== null) alert("Operación cancelada. La palabra ingresada no coincide.");
-        return;
-      }
-
-      const btn = document.getElementById('btnBorrarTodo');
-      const original = btn.innerHTML;
-      btn.innerHTML = '<span>⏳</span> Borrando registros...';
-
-      try {
-        // Elimina el nodo completo de actividades en Firebase Realtime Database
-        await fetch(`${URL_FIREBASE}/actividades.json`, { method: 'DELETE' });
-
-        alert("Se han eliminado todos los registros operativos del sistema correctamente.");
-        cargarActividadesTabla();
-      } catch (err) {
-        alert("Error al borrar los datos: " + err.message);
-      } finally {
-        btn.innerHTML = original;
-      }
-    }
-
-    // EXPORTACIÓN CON ASIGNACIÓN DE FOLIO INSTITUCIONAL C4
+    // EXPORTACIÓN CON ASIGNACIÓN DE FOLIO INSTITUCIONAL C4 (C4-YYYYMMDD-XXXX)
     async function exportarBitacoraParametrizada() {
       const btn = document.getElementById('btnExportarCSV');
       const textoOriginal = btn.innerHTML;
@@ -446,13 +346,16 @@ Reemplaza todo el contenido de **`admin/dashboard.html`** con este código:
           return;
         }
 
+        // GENERACIÓN DE FOLIOS INSTITUCIONALES C4 (Ej: C4-20260930-0001)
         const cabeceras = ["FOLIO_INSTITUCIONAL", "FECHA_EVENTO", "DIA_SEMANA", "HORA_INICIO", "HORA_TERMINO", "ACTIVIDAD_CONSIGNA", "DETALLES_DESCRIPCION", "ESTATUS_OPERATIVO"];
         
         const lineas = resultadosFiltrados.map((r, index) => {
+          // Extraer año, mes y día limpios
           const d = new Date();
           const fechaNumerica = (r.fecha || '').replace(/[^0-9]/g, '').slice(0, 8) || 
             `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
           
+          // Consecutivo de 4 dígitos: 0001, 0002, etc.
           const consecutivo = String(index + 1).padStart(4, '0');
           const folioOficial = `C4-${fechaNumerica}-${consecutivo}`;
 
