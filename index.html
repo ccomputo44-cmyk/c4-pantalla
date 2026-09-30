@@ -8,8 +8,8 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none">
 
-  <!-- ENCABEZADO -->
-  <header class="border-b border-slate-800 bg-slate-900/95 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+  <!-- ENCABEZADO INSTITUCIONAL -->
+  <header class="border-b border-slate-800 bg-slate-900/95 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-lg sticky top-0 z-40">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-lg bg-sky-600/20 border border-sky-500/40 flex items-center justify-center text-sky-400 text-xl font-bold">
         🛡️
@@ -20,15 +20,29 @@
       </div>
     </div>
 
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-3">
+      <!-- BOTÓN DE AUDIO Y TEST DE SIRENA -->
+      <button id="btnAudio" onclick="habilitarAudioYTest()" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 text-xs px-3.5 py-1.5 rounded-lg font-black flex items-center gap-2 transition-all cursor-pointer shadow-lg animate-pulse">
+        <span id="iconoAudio">🔇</span> <span id="textoAudio">ACTIVAR AUDIO / PROBAR ALERTA</span>
+      </button>
+
       <div class="bg-slate-950 px-4 py-1.5 rounded-lg border border-slate-800 font-mono text-emerald-400 text-base font-black tracking-widest" id="relojDigital">
         --:--:--
       </div>
       <a href="admin/login.html" class="bg-slate-800 hover:bg-slate-700 text-xs px-3.5 py-2 rounded-lg font-bold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-all shadow-md">
-        <span>🔐</span> Agregar Datos / Admin
+        <span>🔐</span> Admin
       </a>
     </div>
   </header>
+
+  <!-- BANNER ROJO PARPADEANTE CUANDO HAY OPERATIVO EN CURSO -->
+  <div id="bannerAlertaActiva" class="hidden bg-red-600/90 text-white px-6 py-2 border-b-2 border-red-400 flex items-center justify-between shadow-xl">
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 rounded-full bg-white animate-ping"></span>
+      <span class="text-xs font-black tracking-widest uppercase">DESPLIEGUE OPERATIVO ACTIVO EN ESTE MOMENTO</span>
+    </div>
+    <span id="conteoEnCursoBanner" class="text-xs font-black bg-black/40 px-2 py-0.5 rounded">0 OPERATIVO(S)</span>
+  </div>
 
   <!-- CONTENEDOR PRINCIPAL -->
   <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
@@ -37,11 +51,11 @@
         <h2 class="text-lg font-black text-white uppercase tracking-wider">
           PROGRAMACIÓN OPERATIVA: <span id="textoDiaActual" class="text-sky-400 underline decoration-sky-500 decoration-2">HOY</span>
         </h2>
-        <p class="text-xs text-slate-400 mt-0.5">Despliegue operativo y preventivo asignado en tiempo real.</p>
+        <p class="text-xs text-slate-400 mt-0.5">Despliegue asignado en tiempo real.</p>
       </div>
       <div class="flex items-center gap-3 text-xs font-black">
         <span id="contadorTotalHoy" class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-200 font-mono">
-          ACTIVIDADES REGISTRADAS: 0
+          ACTIVIDADES: 0
         </span>
         <span id="contadorEnVivoHoy" class="bg-red-950/80 border border-red-600/60 px-3 py-1.5 rounded-lg text-red-400 font-mono">
           EN CURSO: 0
@@ -50,18 +64,82 @@
     </div>
 
     <!-- CUADRÍCULA -->
-    <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="col-span-full py-12 text-center text-slate-500">
-        <p class="animate-pulse">Cargando despliegue operativo del C4...</p>
-      </div>
-    </div>
+    <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </main>
+
+  <!-- MODAL FLOTANTE DE ALERTA ROJA -->
+  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-950 border-2 border-red-500 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="w-3.5 h-3.5 rounded-full bg-red-500 animate-ping"></span>
+          <h3 class="text-base font-black text-red-400 uppercase tracking-wider">🚨 ATENCIÓN C4: OPERATIVO EN CURSO</h3>
+        </div>
+        <button onclick="cerrarAlertaModal()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg font-bold border border-slate-700">
+          Entendido [✕]
+        </button>
+      </div>
+
+      <div id="contenedorAlertasModal" class="space-y-3 max-h-[55vh] overflow-y-auto pr-1"></div>
+    </div>
+  </div>
 
   <script>
     const URL_FIREBASE = "https://c4-monitoreo-8d236-default-rtdb.firebaseio.com";
+    let audioCtx = null;
+    let audioHabilitado = false;
+    let modalCerradoManualmente = false;
 
-    function limpiarTexto(str) {
-      return (str || '')
+    // Sonido bitono de sirena policial / alarma institucional
+    function emitirTonoSirena() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const tiempo = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sawtooth';
+      
+      // Tono bitono C4: 850Hz -> 550Hz
+      osc.frequency.setValueAtTime(850, tiempo);
+      osc.frequency.setValueAtTime(550, tiempo + 0.25);
+      osc.frequency.setValueAtTime(850, tiempo + 0.50);
+
+      gain.gain.setValueAtTime(0.3, tiempo);
+      gain.gain.exponentialRampToValueAtTime(0.01, tiempo + 0.75);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(tiempo);
+      osc.stop(tiempo + 0.75);
+    }
+
+    // Activar audio y disparar sirena de prueba
+    function habilitarAudioYTest() {
+      audioHabilitado = true;
+      modalCerradoManualmente = false; // Reabre si estaba cerrado
+      emitirTonoSirena();
+
+      const btn = document.getElementById('btnAudio');
+      btn.className = "bg-emerald-500/20 border border-emerald-500/60 text-emerald-300 text-xs px-3.5 py-1.5 rounded-lg font-black flex items-center gap-2";
+      btn.classList.remove('animate-pulse');
+      document.getElementById('iconoAudio').textContent = "🔊";
+      document.getElementById('textoAudio').textContent = "AUDIO ACTIVO (PROBADO)";
+    }
+
+    function cerrarAlertaModal() {
+      document.getElementById('modalAlerta').classList.add('hidden');
+      modalCerradoManualmente = true;
+    }
+
+    function normalizar(texto) {
+      return (texto || '')
         .toString()
         .toLowerCase()
         .normalize("NFD")
@@ -69,28 +147,32 @@
         .trim();
     }
 
-    function obtenerNombreDia() {
+    function obtenerDiaSemana() {
       const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
       return dias[new Date().getDay()];
     }
 
-    function tickReloj() {
+    function actualizarReloj() {
       const el = document.getElementById('relojDigital');
       if (el) {
         el.textContent = new Date().toLocaleTimeString('es-MX', { hour12: false });
       }
     }
-    setInterval(tickReloj, 1000);
-    tickReloj();
+    setInterval(actualizarReloj, 1000);
+    actualizarReloj();
 
-    async function refrescarMonitor() {
+    async function refrescarDatos() {
       const grid = document.getElementById('gridActividades');
       const badgeTotal = document.getElementById('contadorTotalHoy');
       const badgeEnCurso = document.getElementById('contadorEnVivoHoy');
       const spanDia = document.getElementById('textoDiaActual');
+      const banner = document.getElementById('bannerAlertaActiva');
+      const conteoBanner = document.getElementById('conteoEnCursoBanner');
+      const modal = document.getElementById('modalAlerta');
+      const contModal = document.getElementById('contenedorAlertasModal');
 
-      const diaHoy = obtenerNombreDia();
-      const diaHoyLimpio = limpiarTexto(diaHoy);
+      const diaHoy = obtenerDiaSemana();
+      const diaHoyNorm = normalizar(diaHoy);
       if (spanDia) spanDia.textContent = diaHoy.toUpperCase();
 
       try {
@@ -98,41 +180,34 @@
         const data = await respuesta.json();
 
         if (!data || Object.keys(data).length === 0) {
-          grid.innerHTML = `
-            <div class="col-span-full py-16 text-center text-slate-500 bg-slate-900/40 rounded-2xl border border-slate-800">
-              <p class="text-lg font-bold text-slate-400">No hay consignas registradas en la base de datos.</p>
-              <p class="text-xs text-slate-600 mt-2">Accede a Admin para agregar una nueva actividad.</p>
-            </div>`;
-          badgeTotal.textContent = "ACTIVIDADES REGISTRADAS: 0";
+          grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500">No hay datos en Firebase.</div>`;
+          badgeTotal.textContent = "ACTIVIDADES: 0";
           badgeEnCurso.textContent = "EN CURSO: 0";
+          banner.classList.add('hidden');
+          modal.classList.add('hidden');
           return;
         }
 
-        // Convertir y normalizar propiedades sin importar cómo las guardó el panel
         const lista = Object.keys(data).map(k => {
           const item = data[k];
           return {
             id: k,
-            dia: item.dia || item.diaSemana || item.dia_semana || 'Sin asignar',
+            dia: item.dia || item.diaSemana || item.dia_semana || 'Sin día',
             inicio: item.inicio || item.horaInicio || item.hora_inicio || '00:00',
-            fin: item.fin || item.horaTermino || item.horaFin || item.hora_termino || '23:59',
-            nombre: item.nombre || item.actividad || item.nombreActividad || 'OPERATIVO',
-            descripcion: item.descripcion || item.detalles || 'Sin descripción detallada'
+            fin: item.fin || item.horaTermino || item.horaFin || '23:59',
+            nombre: item.nombre || item.actividad || 'OPERATIVO',
+            descripcion: item.descripcion || item.detalles || 'Sin descripción'
           };
         });
 
-        // Filtrar las de hoy
-        let actividadesAMostrar = lista.filter(item => limpiarTexto(item.dia) === diaHoyLimpio);
-
-        // Respaldo: si ninguna coincide exactamente con el día, muestra todas las de la semana
-        const sonTodas = actividadesAMostrar.length === 0;
-        if (sonTodas) {
-          actividadesAMostrar = lista;
-        }
+        // Filtrar por día
+        let actividadesAMostrar = lista.filter(item => normalizar(item.dia) === diaHoyNorm);
+        if (actividadesAMostrar.length === 0) actividadesAMostrar = lista;
 
         const ahora = new Date();
         const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
         let enCursoCount = 0;
+        let listaEnCurso = [];
 
         let cardsHtml = '';
 
@@ -146,16 +221,17 @@
           let borderStyle = 'border-slate-800 bg-slate-900/80';
           let badgeStyle = 'bg-slate-800 text-slate-400 border border-slate-700';
 
-          const esMismoDia = limpiarTexto(act.dia) === diaHoyLimpio;
+          const esMismoDia = normalizar(act.dia) === diaHoyNorm;
 
           if (esMismoDia && minutosActuales >= minI && minutosActuales <= minF) {
             estado = 'EN CURSO';
             borderStyle = 'border-emerald-500 bg-slate-900 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/50';
-            badgeStyle = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 animate-pulse';
+            badgeStyle = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 animate-pulse font-black';
             enCursoCount++;
+            listaEnCurso.push(act);
           } else if (esMismoDia && minutosActuales > minF) {
             estado = 'CONCLUIDA';
-            borderStyle = 'border-slate-800/60 bg-slate-900/40 opacity-70';
+            borderStyle = 'border-slate-800/60 bg-slate-900/40 opacity-60';
             badgeStyle = 'bg-slate-800/80 text-slate-500 border border-slate-800';
           }
 
@@ -171,7 +247,7 @@
                       ${act.dia}
                     </span>
                   </div>
-                  <span class="text-[10px] font-black tracking-wider uppercase px-2.5 py-1 rounded-md ${badgeStyle}">
+                  <span class="text-[10px] uppercase px-2.5 py-1 rounded-md ${badgeStyle}">
                     ${estado}
                   </span>
                 </div>
@@ -183,21 +259,44 @@
         });
 
         grid.innerHTML = cardsHtml;
-        badgeTotal.textContent = `ACTIVIDADES REGISTRADAS: ${actividadesAMostrar.length}`;
+        badgeTotal.textContent = `ACTIVIDADES: ${actividadesAMostrar.length}`;
         badgeEnCurso.textContent = `EN CURSO: ${enCursoCount}`;
 
+        // Control del Banner y Modal de Alerta
+        if (listaEnCurso.length > 0) {
+          banner.classList.remove('hidden');
+          conteoBanner.textContent = `${listaEnCurso.length} OPERATIVO(S) ACTIVO(S)`;
+
+          if (!modalCerradoManualmente) {
+            modal.classList.remove('hidden');
+            contModal.innerHTML = listaEnCurso.map(a => `
+              <div class="p-3 bg-red-950/40 border border-red-500/50 rounded-xl">
+                <div class="flex justify-between items-center text-xs font-bold text-red-300 mb-1">
+                  <span>🕒 Horario: ${a.inicio} - ${a.fin}</span>
+                  <span class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-black">ACTIVO</span>
+                </div>
+                <h4 class="text-base font-black text-white uppercase">${a.nombre}</h4>
+                <p class="text-xs text-slate-300 mt-1">${a.descripcion}</p>
+              </div>
+            `).join('');
+          }
+
+          if (audioHabilitado) {
+            emitirTonoSirena();
+          }
+        } else {
+          banner.classList.add('hidden');
+          modal.classList.add('hidden');
+        }
+
       } catch (err) {
-        console.error("Error al consultar Firebase:", err);
-        grid.innerHTML = `
-          <div class="col-span-full p-4 text-center text-red-400 bg-red-950/30 border border-red-800 rounded-xl">
-            Error al sincronizar con Firebase: ${err.message}
-          </div>`;
+        console.error("Error al refrescar:", err);
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      refrescarMonitor();
-      setInterval(refrescarMonitor, 4000);
+      refrescarDatos();
+      setInterval(refrescarDatos, 4000);
     });
   </script>
 </body>
