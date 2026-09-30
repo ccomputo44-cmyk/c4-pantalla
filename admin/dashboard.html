@@ -116,11 +116,12 @@
       <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-3">
         <div>
           <h3 class="text-base font-black text-white uppercase tracking-wider">EXPORTACIÓN DE BITÁCORA Y REPORTES</h3>
-          <p class="text-xs text-slate-400 mt-0.5">Genera archivos oficiales con folio institucional compatibles con Microsoft Excel.</p>
+          <p class="text-xs text-slate-400 mt-0.5">Genera archivos oficiales compatibles con Microsoft Excel y Google Sheets.</p>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+        <!-- SELECTOR DE FILTRO -->
         <div class="md:col-span-4">
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Tipo de Reporte</label>
           <select id="tipoExportacion" onchange="alternarFiltroDia()" class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
@@ -130,6 +131,7 @@
           </select>
         </div>
 
+        <!-- SELECTOR DE DÍA DE LA SEMANA -->
         <div id="contenedorDiaSemana" class="hidden md:col-span-4">
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Seleccionar Día</label>
           <select id="selectFiltroDia" class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
@@ -143,11 +145,13 @@
           </select>
         </div>
 
+        <!-- SELECTOR DE FECHA CALENDARIO -->
         <div id="contenedorFecha" class="hidden md:col-span-4">
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Fecha del Operativo</label>
           <input type="date" id="inputFiltroFecha" class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2 text-xs text-white outline-none font-mono">
         </div>
 
+        <!-- BOTÓN DE DESCARGA -->
         <div class="md:col-span-4">
           <button type="button" onclick="exportarBitacoraParametrizada()" id="btnExportarCSV" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-black text-xs uppercase tracking-wider py-3 rounded-xl shadow-lg shadow-sky-600/30 transition-all flex items-center justify-center gap-2">
             <span>📥</span> DESCARGAR REPORTE (EXCEL CSV)
@@ -161,6 +165,7 @@
   <script>
     const URL_FIREBASE = "https://c4-monitoreo-8d236-default-rtdb.firebaseio.com";
 
+    // Verificación de acceso
     if (!sessionStorage.getItem('c4_autenticado')) {
       window.location.href = 'login.html';
     }
@@ -265,7 +270,6 @@
       }
     }
 
-    // EXPORTACIÓN CON ASIGNACIÓN DE FOLIO INSTITUCIONAL C4 (C4-YYYYMMDD-XXXX)
     async function exportarBitacoraParametrizada() {
       const btn = document.getElementById('btnExportarCSV');
       const textoOriginal = btn.innerHTML;
@@ -290,7 +294,7 @@
           Object.keys(dataAct).forEach(k => {
             const item = dataAct[k];
             consolidado.push({
-              idFirebase: k,
+              folio: `ACT-${k.slice(-6)}`,
               fecha: item.fechaCreacion ? item.fechaCreacion.slice(0, 10) : new Date().toISOString().slice(0, 10),
               dia: item.dia || '',
               inicio: item.inicio || '',
@@ -306,13 +310,13 @@
           Object.keys(dataBit).forEach(k => {
             const b = dataBit[k];
             consolidado.push({
-              idFirebase: k,
-              fecha: b.fecha ? b.fecha.replace(/\//g, '-') : new Date().toISOString().slice(0, 10),
+              folio: `BIT-${k.slice(-6)}`,
+              fecha: b.fecha || new Date().toISOString().slice(0, 10),
               dia: b.dia || 'N/A',
               inicio: b.horaCierre || '',
               fin: b.horaCierre || '',
               nombre: b.nombre || 'EVENTO BITACORA',
-              descripcion: `Cierre registrado: ${b.tipoCierre || 'AUTOMÁTICO'}`,
+              descripcion: `Cierre: ${b.tipoCierre || 'AUTOMÁTICO'}`,
               estado: 'CONCLUIDA'
             });
           });
@@ -346,37 +350,25 @@
           return;
         }
 
-        // GENERACIÓN DE FOLIOS INSTITUCIONALES C4 (Ej: C4-20260930-0001)
-        const cabeceras = ["FOLIO_INSTITUCIONAL", "FECHA_EVENTO", "DIA_SEMANA", "HORA_INICIO", "HORA_TERMINO", "ACTIVIDAD_CONSIGNA", "DETALLES_DESCRIPCION", "ESTATUS_OPERATIVO"];
+        const cabeceras = ["FOLIO", "FECHA", "DIA_SEMANA", "HORA_INICIO", "HORA_TERMINO", "ACTIVIDAD_OPERATIVA", "DESCRIPCION", "ESTADO"];
         
-        const lineas = resultadosFiltrados.map((r, index) => {
-          // Extraer año, mes y día limpios
-          const d = new Date();
-          const fechaNumerica = (r.fecha || '').replace(/[^0-9]/g, '').slice(0, 8) || 
-            `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-          
-          // Consecutivo de 4 dígitos: 0001, 0002, etc.
-          const consecutivo = String(index + 1).padStart(4, '0');
-          const folioOficial = `C4-${fechaNumerica}-${consecutivo}`;
-
-          return [
-            `"${folioOficial}"`,
-            `"${(r.fecha || '').replace(/"/g, '""')}"`,
-            `"${(r.dia || '').replace(/"/g, '""')}"`,
-            `"${(r.inicio || '').replace(/"/g, '""')}"`,
-            `"${(r.fin || '').replace(/"/g, '""')}"`,
-            `"${(r.nombre || '').replace(/"/g, '""')}"`,
-            `"${(r.descripcion || '').replace(/"/g, '""')}"`,
-            `"${(r.estado || '').replace(/"/g, '""')}"`
-          ].join(",");
-        });
+        const lineas = resultadosFiltrados.map(r => [
+          `"${(r.folio || '').replace(/"/g, '""')}"`,
+          `"${(r.fecha || '').replace(/"/g, '""')}"`,
+          `"${(r.dia || '').replace(/"/g, '""')}"`,
+          `"${(r.inicio || '').replace(/"/g, '""')}"`,
+          `"${(r.fin || '').replace(/"/g, '""')}"`,
+          `"${(r.nombre || '').replace(/"/g, '""')}"`,
+          `"${(r.descripcion || '').replace(/"/g, '""')}"`,
+          `"${(r.estado || '').replace(/"/g, '""')}"`
+        ].join(","));
 
         const contenidoFinal = "\uFEFF" + [cabeceras.join(","), ...lineas].join("\r\n");
 
         const blob = new Blob([contenidoFinal], { type: "text/csv;charset=utf-8;" });
         const enlace = document.createElement("a");
         enlace.href = URL.createObjectURL(blob);
-        enlace.download = `Bitacora_Oficial_C4_${sufijoArchivo}_${new Date().toISOString().slice(0, 10)}.csv`;
+        enlace.download = `Reporte_C4_${sufijoArchivo}_${new Date().toISOString().slice(0, 10)}.csv`;
         document.body.appendChild(enlace);
         enlace.click();
         document.body.removeChild(enlace);
