@@ -7,14 +7,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @keyframes entradaGlass {
-      0% {
-        opacity: 0;
-        transform: scale(0.95);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
     }
     .modal-animado {
       animation: entradaGlass 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -23,7 +17,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none" onclick="desbloquearAudioSilencioso()" onkeydown="desbloquearAudioSilencioso()">
 
-  <!-- ENCABEZADO INSTITUCIONAL DE ALTA VISIBILIDAD -->
+  <!-- ENCABEZADO INSTITUCIONAL -->
   <header class="border-b border-slate-800 bg-slate-900/95 px-8 py-4 flex flex-wrap items-center justify-between gap-6 shadow-2xl sticky top-0 z-40">
     <div class="flex items-center gap-4">
       <div class="w-14 h-14 rounded-2xl bg-slate-900/90 border-2 border-sky-500/50 p-1.5 flex items-center justify-center shadow-lg overflow-hidden">
@@ -40,10 +34,9 @@
 
     <div class="flex items-center gap-4">
       <div id="indicadorAudio" class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> SISTEMA DE VOZ C4 ACTIVO
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> SISTEMA C4 ACTIVO
       </div>
 
-      <!-- RELOJ DIGITAL GIGANTE -->
       <div class="bg-slate-950 px-6 py-2 rounded-xl border-2 border-slate-800 font-mono text-emerald-400 text-2xl md:text-3xl font-black tracking-widest shadow-inner" id="relojDigital">
         --:--:--
       </div>
@@ -54,13 +47,13 @@
     </div>
   </header>
 
-  <!-- BANNER ROJO AMPLIADO -->
-  <div id="bannerAlertaActiva" class="hidden bg-red-600 text-white px-8 py-3 border-b-4 border-red-400 flex items-center justify-between shadow-2xl animate-pulse">
+  <!-- BANNER DINÁMICO SUPERIOR -->
+  <div id="bannerAlertaActiva" class="hidden bg-slate-900 border-b-2 border-slate-700 text-white px-8 py-3 flex items-center justify-between shadow-2xl transition-all">
     <div class="flex items-center gap-3">
-      <span class="w-4 h-4 rounded-full bg-white animate-ping"></span>
-      <span class="text-sm md:text-base font-black tracking-widest uppercase drop-shadow">DESPLIEGUE OPERATIVO ACTIVO EN ESTE MOMENTO</span>
+      <span id="bannerPuntoLuz" class="w-4 h-4 rounded-full bg-emerald-500 animate-ping"></span>
+      <span id="bannerTextoAlerta" class="text-sm md:text-base font-black tracking-widest uppercase drop-shadow">DESPLIEGUE OPERATIVO MONITOREADO</span>
     </div>
-    <span id="conteoEnCursoBanner" class="text-sm font-black bg-black/50 border border-white/20 px-3 py-1 rounded-lg">0 OPERATIVOS</span>
+    <span id="conteoEnCursoBanner" class="text-sm font-black bg-black/60 border border-white/20 px-3 py-1 rounded-lg">0 ACTIVOS</span>
   </div>
 
   <!-- CONTENEDOR PRINCIPAL: CONCLUIDAS (IZQUIERDA) Y ACTIVAS (DERECHA) -->
@@ -94,13 +87,13 @@
           <h2 class="text-xl md:text-2xl font-black text-white uppercase tracking-wider flex items-center gap-3">
             PROGRAMACIÓN OPERATIVA: <span id="textoDiaActual" class="text-sky-400 underline decoration-sky-500 decoration-4">HOY</span>
           </h2>
-          <p class="text-xs md:text-sm text-slate-400 mt-1">Despliegue operativo y preventivo asignado en tiempo real.</p>
+          <p class="text-xs md:text-sm text-slate-400 mt-1">Despliegue asignado en tiempo real. Cierre manual disponible.</p>
         </div>
         <div class="flex items-center gap-3 font-black">
           <span id="contadorTotalHoy" class="bg-slate-950 border border-slate-700 px-4 py-2 rounded-xl text-slate-200 font-mono text-sm shadow">
             ACTIVIDADES: 0
           </span>
-          <span id="contadorEnVivoHoy" class="bg-red-950/80 border-2 border-red-600/70 px-4 py-2 rounded-xl text-red-400 font-mono text-sm shadow animate-pulse">
+          <span id="contadorEnVivoHoy" class="bg-emerald-950/80 border-2 border-emerald-600/70 px-4 py-2 rounded-xl text-emerald-400 font-mono text-sm shadow">
             EN CURSO: 0
           </span>
         </div>
@@ -111,20 +104,20 @@
 
   </main>
 
-  <!-- MODAL TRANSLÚCIDO CON EFECTO VIDRIO DIFUMINADO (BACKDROP BLUR) -->
-  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-md flex items-center justify-center p-6 transition-all duration-300">
-    <div class="modal-animado bg-slate-950/90 border-2 border-red-500/90 rounded-3xl max-w-xl w-full p-7 shadow-2xl relative shadow-red-900/50 backdrop-blur-xl">
+  <!-- MODAL TRANSLÚCIDO DIFUMINADO MULTICOLOR (REABRE CADA 1 MINUTO) -->
+  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-md flex items-center justify-center p-6 transition-all duration-300">
+    <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl max-w-2xl w-full p-7 shadow-2xl relative backdrop-blur-xl">
       <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
         <div class="flex items-center gap-3">
-          <span class="w-3.5 h-3.5 rounded-full bg-red-500 animate-ping"></span>
-          <h3 class="text-lg md:text-xl font-black text-red-400 uppercase tracking-wider">🚨 ATENCIÓN C4: OPERATIVO EN CURSO</h3>
+          <span class="w-3.5 h-3.5 rounded-full bg-amber-400 animate-ping"></span>
+          <h3 class="text-base md:text-lg font-black text-white uppercase tracking-wider">MONITOR DE ESTADO OPERATIVO C4</h3>
         </div>
-        <button onclick="pausarAlertaSeisSegundos()" class="text-xs md:text-sm bg-red-950/90 hover:bg-red-900 text-red-300 px-3.5 py-2 rounded-xl font-black border border-red-700/80 transition-all flex items-center gap-1.5 shadow">
-          <span>⏸</span> Minimizar (6s) [✕]
+        <button onclick="pausarAlertaUnMinuto()" class="text-xs md:text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 px-3.5 py-2 rounded-xl font-black border border-slate-700 transition-all flex items-center gap-1.5 shadow">
+          <span>⏸</span> Minimizar (Reabre en 1 min) [✕]
         </button>
       </div>
 
-      <div id="contenedorAlertasModal" class="space-y-4 max-h-[55vh] overflow-y-auto pr-1"></div>
+      <div id="contenedorAlertasModal" class="space-y-4 max-h-[60vh] overflow-y-auto pr-1"></div>
     </div>
   </div>
 
@@ -156,7 +149,7 @@
         osc.frequency.setValueAtTime(500, t + 0.25);
         osc.frequency.setValueAtTime(800, t + 0.50);
 
-        gain.gain.setValueAtTime(0.25, t);
+        gain.gain.setValueAtTime(0.2, t);
         gain.gain.exponentialRampToValueAtTime(0.01, t + 0.7);
 
         osc.connect(gain);
@@ -180,18 +173,52 @@
       }
     }
 
-    function pausarAlertaSeisSegundos() {
+    // PAUSAR EXACTAMENTE 1 MINUTO (60,000 milisegundos)
+    function pausarAlertaUnMinuto() {
       document.getElementById('modalAlerta').classList.add('hidden');
-      pausaTemporalHasta = Date.now() + 6000;
+      pausaTemporalHasta = Date.now() + 60000;
+    }
+
+    // CIERRE MANUAL DE ACTIVIDAD DESDE LA PANTALLA PRINCIPAL
+    async function cerrarActividadManual(id, nombre) {
+      if (!confirm(`¿Confirmas el cierre del operativo "${nombre}"? Se registrará como finalizado.`)) return;
+
+      const ahora = new Date();
+      const horaCierre = ahora.toLocaleTimeString('es-MX', { hour12: false });
+      
+      try {
+        await fetch(`${URL_FIREBASE}/actividades/${id}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cerradaManualmente: true,
+            horaCierreReal: horaCierre,
+            timestampCierre: Date.now()
+          })
+        });
+
+        // Registrar en bitácora de Firebase
+        await fetch(`${URL_FIREBASE}/bitacora.json`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            actividadId: id,
+            nombre: nombre,
+            fecha: ahora.toLocaleDateString('es-MX'),
+            horaCierre: horaCierre,
+            tipoCierre: 'MANUAL OPERADOR',
+            timestamp: Date.now()
+          })
+        });
+
+        refrescarDatos();
+      } catch (err) {
+        alert("Error al concluir la actividad: " + err.message);
+      }
     }
 
     function normalizar(texto) {
-      return (texto || '')
-        .toString()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .trim();
+      return (texto || '').toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
     }
 
     function obtenerDiaSemana() {
@@ -214,6 +241,8 @@
       const badgeEnCurso = document.getElementById('contadorEnVivoHoy');
       const spanDia = document.getElementById('textoDiaActual');
       const banner = document.getElementById('bannerAlertaActiva');
+      const bannerLuz = document.getElementById('bannerPuntoLuz');
+      const bannerTexto = document.getElementById('bannerTextoAlerta');
       const conteoBanner = document.getElementById('conteoEnCursoBanner');
       const modal = document.getElementById('modalAlerta');
       const contModal = document.getElementById('contenedorAlertasModal');
@@ -245,7 +274,10 @@
             inicio: item.inicio || item.horaInicio || item.hora_inicio || '00:00',
             fin: item.fin || item.horaTermino || item.horaFin || '23:59',
             nombre: item.nombre || item.actividad || 'OPERATIVO',
-            descripcion: item.descripcion || item.detalles || 'Sin descripción'
+            descripcion: item.descripcion || item.detalles || 'Sin descripción',
+            cerradaManualmente: item.cerradaManualmente || false,
+            horaCierreReal: item.horaCierreReal || '',
+            timestampCierre: item.timestampCierre || 0
           };
         });
 
@@ -254,12 +286,15 @@
 
         const ahora = new Date();
         const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
-        
+        const msActuales = Date.now();
+
         let enCursoCount = 0;
-        let listaEnCurso = [];
         let cardsHtml = '';
         let finalizadasHtml = '';
         let totalFinalizadas = 0;
+
+        // Tarjetas que califiquen para la ventana emergente
+        let tarjetasEmergentes = [];
 
         actividadesDelDia.forEach(act => {
           const [hI, mI] = (act.inicio || '00:00').split(':').map(Number);
@@ -269,8 +304,15 @@
 
           const esMismoDia = normalizar(act.dia) === diaHoyNorm;
 
-          if (esMismoDia && minutosActuales > minF) {
+          // DETERMINAR SI ESTÁ CONCLUIDA (Por botón manual o por horario vencido)
+          const yaPasoHorario = esMismoDia && (minutosActuales > minF);
+          const estaConcluida = act.cerradaManualmente || yaPasoHorario;
+
+          if (estaConcluida) {
             totalFinalizadas++;
+
+            const textoHoraFin = act.horaCierreReal ? `Cerrada: ${act.horaCierreReal}` : `${act.inicio} - ${act.fin}`;
+
             finalizadasHtml += `
               <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 hover:border-slate-700 transition-all flex flex-col gap-1.5 shadow">
                 <div class="flex items-center justify-between gap-2">
@@ -279,28 +321,76 @@
                     <span class="text-xs font-black tracking-wider text-emerald-400 uppercase">Concluida</span>
                   </div>
                   <span class="text-xs font-mono font-bold text-slate-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
-                    ${act.inicio} - ${act.fin}
+                    ${textoHoraFin}
                   </span>
                 </div>
                 <h4 class="text-sm font-black text-slate-200 uppercase truncate mt-0.5">${act.nombre}</h4>
                 <p class="text-xs text-slate-400 line-clamp-1 leading-snug">${act.descripcion}</p>
               </div>
             `;
+
+            // REGLA ROJA (FINALIZADA): Solo aparece durante 15 minutos tras su cierre
+            let tiempoDesdeCierreMs = 0;
+            if (act.timestampCierre) {
+              tiempoDesdeCierreMs = msActuales - act.timestampCierre;
+            } else {
+              // Si fue por horario, calcular minutos transcurridos
+              const diffMinutos = minutosActuales - minF;
+              tiempoDesdeCierreMs = diffMinutos * 60 * 1000;
+            }
+
+            // 15 minutos = 15 * 60 * 1000 = 900,000 ms
+            if (tiempoDesdeCierreMs >= 0 && tiempoDesdeCierreMs <= 900000) {
+              const minutosRestantesAlerta = Math.ceil((900000 - tiempoDesdeCierreMs) / 60000);
+              tarjetasEmergentes.push({
+                color: 'rojo',
+                tituloBadge: 'FINALIZADA',
+                tiempoTexto: `${textoHoraFin} • Cierra aviso en ${minutosRestantesAlerta} min`,
+                nombre: act.nombre,
+                descripcion: act.descripcion
+              });
+            }
+
           } else {
+            // OPERATIVOS ACTIVOS O PROGRAMADOS
             let estado = 'PROGRAMADO';
             let borderStyle = 'border-slate-800 bg-slate-900/80';
             let badgeStyle = 'bg-slate-800 text-slate-400 border border-slate-700';
 
+            const minutosFaltantesParaIniciar = minI - minutosActuales;
+
+            // 1. REGLA VERDE: EN CURSO
             if (esMismoDia && minutosActuales >= minI && minutosActuales <= minF) {
               estado = 'EN CURSO';
               borderStyle = 'border-2 border-emerald-500 bg-slate-900 shadow-2xl shadow-emerald-500/10 ring-2 ring-emerald-500/40';
               badgeStyle = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 animate-pulse font-black';
               enCursoCount++;
-              listaEnCurso.push(act);
+
+              tarjetasEmergentes.push({
+                color: 'verde',
+                tituloBadge: 'EN CURSO',
+                tiempoTexto: `🕒 ${act.inicio} - ${act.fin}`,
+                nombre: act.nombre,
+                descripcion: act.descripcion
+              });
+
+            // 2. REGLA AMARILLA: POR INICIAR EN 15 MINUTOS (entre 1 y 15 minutos antes)
+            } else if (esMismoDia && minutosFaltantesParaIniciar > 0 && minutosFaltantesParaIniciar <= 15) {
+              estado = 'POR INICIAR';
+              borderStyle = 'border-2 border-amber-500/80 bg-slate-900 shadow-xl shadow-amber-500/10';
+              badgeStyle = 'bg-amber-500/20 text-amber-400 border border-amber-500/50 animate-pulse font-black';
+
+              tarjetasEmergentes.push({
+                color: 'amarillo',
+                tituloBadge: `INICIA EN ${minutosFaltantesParaIniciar} MIN`,
+                tiempoTexto: `🕒 Programado: ${act.inicio} - ${act.fin}`,
+                nombre: act.nombre,
+                descripcion: act.descripcion
+              });
             }
 
             cardsHtml += `
-              <div class="rounded-2xl p-6 border ${borderStyle} flex flex-col justify-between transition-all min-h-[190px] shadow-lg">
+              <div class="rounded-2xl p-6 border ${borderStyle} flex flex-col justify-between transition-all min-h-[200px] shadow-lg">
                 <div>
                   <div class="flex items-center justify-between gap-3 mb-4">
                     <div class="flex items-center gap-2">
@@ -316,7 +406,14 @@
                     </span>
                   </div>
                   <h3 class="text-xl font-black text-white uppercase tracking-wide mb-2">${act.nombre}</h3>
-                  <p class="text-sm text-slate-300 leading-relaxed">${act.descripcion}</p>
+                  <p class="text-sm text-slate-300 leading-relaxed mb-4">${act.descripcion}</p>
+                </div>
+
+                <!-- BOTÓN DE CIERRE MANUAL -->
+                <div class="pt-3 border-t border-slate-800/80 flex justify-end">
+                  <button onclick="cerrarActividadManual('${act.id}', '${act.nombre}')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white px-3 py-1.5 rounded-xl font-bold text-xs border border-slate-700 hover:border-emerald-500 transition-all flex items-center gap-1.5 shadow">
+                    <span>✓</span> Concluir / Cerrar
+                  </button>
                 </div>
               </div>
             `;
@@ -335,33 +432,77 @@
         badgeTotal.textContent = `ACTIVIDADES: ${actividadesDelDia.length}`;
         badgeEnCurso.textContent = `EN CURSO: ${enCursoCount}`;
 
-        if (listaEnCurso.length > 0) {
+        // CONTROL DEL BANNER SUPERIOR
+        if (enCursoCount > 0) {
           banner.classList.remove('hidden');
-          conteoBanner.textContent = `${listaEnCurso.length} OPERATIVO(S) ACTIVO(S)`;
+          banner.className = "bg-emerald-600 text-white px-8 py-3 border-b-4 border-emerald-400 flex items-center justify-between shadow-2xl animate-pulse";
+          bannerLuz.className = "w-4 h-4 rounded-full bg-white animate-ping";
+          bannerTexto.textContent = "DESPLIEGUE OPERATIVO ACTIVO EN ESTE MOMENTO";
+          conteoBanner.textContent = `${enCursoCount} EN CURSO`;
+        } else if (tarjetasEmergentes.some(t => t.color === 'amarillo')) {
+          banner.classList.remove('hidden');
+          banner.className = "bg-amber-600 text-white px-8 py-3 border-b-4 border-amber-400 flex items-center justify-between shadow-2xl";
+          bannerLuz.className = "w-4 h-4 rounded-full bg-white animate-ping";
+          bannerTexto.textContent = "OPERATIVO PRÓXIMO A INICIAR (EN MENOS DE 15 MIN)";
+          conteoBanner.textContent = `PREPARACIÓN`;
+        } else {
+          banner.classList.add('hidden');
+        }
 
+        // CONTROL DE VENTANA EMERGENTE MULTICOLOR Y REAPERTURA CADA 1 MINUTO
+        if (tarjetasEmergentes.length > 0) {
           if (Date.now() >= pausaTemporalHasta) {
             modal.classList.remove('hidden');
-            contModal.innerHTML = listaEnCurso.map(a => `
-              <div class="p-4 bg-red-950/40 border-2 border-red-500/60 rounded-2xl shadow backdrop-blur-sm">
-                <div class="flex justify-between items-center text-sm font-bold text-red-300 mb-1.5">
-                  <span class="font-mono">🕒 Horario: ${a.inicio} - ${a.fin}</span>
-                  <span class="bg-red-600 text-white text-xs px-2.5 py-0.5 rounded font-black tracking-wider">ACTIVO</span>
-                </div>
-                <h4 class="text-lg font-black text-white uppercase">${a.nombre}</h4>
-                <p class="text-sm text-slate-300 mt-1">${a.descripcion}</p>
-              </div>
-            `).join('');
 
-            if (Date.now() - ultimaVozEmitida > 6000) {
+            contModal.innerHTML = tarjetasEmergentes.map(t => {
+              if (t.color === 'verde') {
+                return `
+                  <div class="p-4 bg-emerald-950/60 border-2 border-emerald-500/80 rounded-2xl shadow-lg">
+                    <div class="flex justify-between items-center text-sm font-bold text-emerald-300 mb-1.5">
+                      <span class="font-mono">${t.tiempoTexto}</span>
+                      <span class="bg-emerald-600 text-white text-xs px-2.5 py-0.5 rounded font-black tracking-wider">🟢 ${t.tituloBadge}</span>
+                    </div>
+                    <h4 class="text-lg font-black text-white uppercase">${t.nombre}</h4>
+                    <p class="text-sm text-slate-300 mt-1">${t.descripcion}</p>
+                  </div>`;
+              } else if (t.color === 'amarillo') {
+                return `
+                  <div class="p-4 bg-amber-950/60 border-2 border-amber-500/80 rounded-2xl shadow-lg">
+                    <div class="flex justify-between items-center text-sm font-bold text-amber-300 mb-1.5">
+                      <span class="font-mono">${t.tiempoTexto}</span>
+                      <span class="bg-amber-500 text-slate-950 text-xs px-2.5 py-0.5 rounded font-black tracking-wider">🟡 ${t.tituloBadge}</span>
+                    </div>
+                    <h4 class="text-lg font-black text-white uppercase">${t.nombre}</h4>
+                    <p class="text-sm text-slate-300 mt-1">${t.descripcion}</p>
+                  </div>`;
+              } else {
+                // ROJO: FINALIZADA
+                return `
+                  <div class="p-4 bg-red-950/60 border-2 border-red-500/80 rounded-2xl shadow-lg">
+                    <div class="flex justify-between items-center text-sm font-bold text-red-300 mb-1.5">
+                      <span class="font-mono">${t.tiempoTexto}</span>
+                      <span class="bg-red-600 text-white text-xs px-2.5 py-0.5 rounded font-black tracking-wider">🔴 ${t.tituloBadge}</span>
+                    </div>
+                    <h4 class="text-lg font-black text-white uppercase">${t.nombre}</h4>
+                    <p class="text-sm text-slate-300 mt-1">${t.descripcion}</p>
+                  </div>`;
+              }
+            }).join('');
+
+            // Alarma sonora y de voz si hay verdes o amarillos
+            if (Date.now() - ultimaVozEmitida > 60000) {
               emitirSirenaC4();
               setTimeout(() => {
-                emitirVozC4("Atención C-4. Operativo en curso. Despliegue activo.");
+                if (enCursoCount > 0) {
+                  emitirVozC4("Atención C-4. Operativo en curso. Despliegue activo.");
+                } else {
+                  emitirVozC4("Atención C-4. Próximo despliegue operativo en turno.");
+                }
               }, 600);
               ultimaVozEmitida = Date.now();
             }
           }
         } else {
-          banner.classList.add('hidden');
           modal.classList.add('hidden');
         }
 
