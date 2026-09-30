@@ -1,7 +1,4 @@
-/**
- * audio.js - Motor sintetizador de sirena táctica autónoma
- * Suena exactamente 5 segundos al inicio y repite 5 segundos cada 5 minutos
- */
+
 class MotorAudioC4 {
   constructor() {
     this.contextoAudio = null;
