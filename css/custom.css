@@ -1,9 +1,4 @@
-/* ==========================================================================
-   SISTEMA C4 - HOJA DE ESTILOS PERSONALIZADA INSTITUCIONAL
-   Alto contraste para sala de monitoreo y pantallas de proyección
-   ========================================================================== */
-
-/* Animación de alerta táctica con rojo de emergencia */
+/* Animación de alerta  */
 @keyframes alertaPulsoEmergencia {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
@@ -38,7 +33,7 @@
   background: #475569;
 }
 
-/* Paneles institucionales de alto contraste */
+/* Paneles institucionales */
 .panel-institucional {
   background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(12px);
