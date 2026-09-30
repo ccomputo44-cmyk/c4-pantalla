@@ -46,10 +46,9 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none" onclick="desbloquearAudioSilencioso()" onkeydown="desbloquearAudioSilencioso()">
 
-  <!-- ENCABEZADO INSTITUCIONAL EXTRA GRANDE (ALTO IMPACTO VISUAL) -->
+  <!-- ENCABEZADO INSTITUCIONAL EXTRA GRANDE -->
   <header class="border-b-2 border-slate-800 bg-slate-900/95 px-8 md:px-10 py-5 md:py-6 flex flex-wrap items-center justify-between gap-6 shadow-2xl sticky top-0 z-40 backdrop-blur-md">
     <div class="flex items-center gap-5">
-      <!-- LOGO INSTITUCIONAL AMPLIADO -->
       <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-slate-950/90 border-2 border-sky-500/60 p-2 flex items-center justify-center shadow-2xl shadow-sky-500/20 overflow-hidden flex-shrink-0">
         <img src="logo.png" 
              onerror="this.onerror=null; this.src='logo.jpg'; this.onerror=function(){this.src='logo.jpeg'; this.onerror=function(){this.src='logo.PNG';}};" 
@@ -63,12 +62,10 @@
     </div>
 
     <div class="flex items-center gap-5">
-      <!-- BADGE DE ESTADO DE SISTEMA -->
       <div id="indicadorAudio" class="bg-emerald-500/15 border-2 border-emerald-500/40 text-emerald-400 text-sm px-4 py-2.5 rounded-2xl font-black flex items-center gap-2.5 shadow-md">
         <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span> SISTEMA C4 ACTIVO
       </div>
 
-      <!-- RELOJ DIGITAL GIGANTE -->
       <div class="bg-slate-950 px-7 py-2.5 rounded-2xl border-2 border-slate-800 font-mono text-emerald-400 text-3xl md:text-4xl font-black tracking-widest shadow-2xl ring-1 ring-emerald-500/20" id="relojDigital">
         --:--:--
       </div>
@@ -114,8 +111,6 @@
 
     <!-- COLUMNA DERECHA: DESPLIEGUE OPERATIVO -->
     <div class="flex-1 flex flex-col gap-5 min-w-0 w-full">
-      
-      <!-- HEADER OPERATIVO -->
       <div class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 flex flex-wrap items-center justify-between gap-3 shadow-lg">
         <div>
           <h2 class="text-base md:text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
@@ -133,17 +128,17 @@
         </div>
       </div>
 
-      <!-- CUADRÍCULA DE FICHAS COMPACTAS -->
       <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 items-start"></div>
     </div>
 
   </main>
 
-  <!-- MODAL TRANSLÚCIDO EXTRA PANORÁMICO -->
-  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-3 md:p-6 transition-all duration-300">
-    <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl w-[96vw] max-w-[1850px] p-5 md:p-7 shadow-2xl relative backdrop-blur-xl flex flex-col max-h-[92vh]">
+  <!-- MODAL TRANSLÚCIDO CON ANCHO AUTOAJUSTABLE A LAS TARJETAS -->
+  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4 md:p-8 transition-all duration-300">
+    <!-- El contenedor usa max-content con límite en 96vw para que nunca sobre espacio a la derecha -->
+    <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl w-auto max-w-[96vw] p-5 md:p-7 shadow-2xl relative backdrop-blur-xl flex flex-col max-h-[92vh]">
       
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3.5 mb-5 flex-shrink-0">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3.5 mb-5 flex-shrink-0 gap-6">
         <div class="flex items-center gap-3.5">
           <span class="w-4 h-4 rounded-full bg-amber-400 animate-ping"></span>
           <h3 class="text-lg md:text-xl font-black text-white uppercase tracking-wider">MONITOR DE ESTADO OPERATIVO C4</h3>
@@ -154,7 +149,8 @@
         </button>
       </div>
 
-      <div id="contenedorAlertasModal" class="overflow-y-auto pr-1 flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-max"></div>
+      <!-- El id se mantiene y las columnas se ajustan con JS según la cantidad exacta -->
+      <div id="contenedorAlertasModal" class="overflow-y-auto pr-1 flex-1 gap-4 auto-rows-max"></div>
     </div>
   </div>
 
@@ -466,11 +462,26 @@
           banner.classList.add('hidden');
         }
 
+        // VENTANA EMERGENTE AUTOAJUSTABLE A LA CANTIDAD EXACTA DE TARJETAS
         if (tarjetasEmergentes.length > 0) {
-          badgeTotalEmergentes.textContent = `${tarjetasEmergentes.length} EVENTOS`;
+          const totalCards = tarjetasEmergentes.length;
+          badgeTotalEmergentes.textContent = `${totalCards} EVENTOS`;
 
           if (Date.now() >= pausaTemporalHasta) {
             modal.classList.remove('hidden');
+
+            // CLASES DE COLUMNAS SEGÚN EL NÚMERO DE EVENTOS
+            let claseGrid = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4';
+            if (totalCards === 1) {
+              claseGrid = 'grid grid-cols-1 w-[420px] max-w-full gap-4';
+            } else if (totalCards === 2) {
+              claseGrid = 'grid grid-cols-1 md:grid-cols-2 w-[840px] max-w-full gap-4';
+            } else if (totalCards === 3) {
+              // 3 columnas exactas que llenan perfectamente el cuadro sin huecos vacíos
+              claseGrid = 'grid grid-cols-1 md:grid-cols-3 w-[1260px] max-w-full gap-4';
+            }
+
+            contModal.className = `overflow-y-auto pr-1 flex-1 ${claseGrid} auto-rows-max`;
 
             contModal.innerHTML = tarjetasEmergentes.map(t => {
               if (t.color === 'verde') {
@@ -491,7 +502,7 @@
                     <div>
                       <div class="flex justify-between items-center text-xs font-black text-amber-300 mb-2 gap-2">
                         <span class="font-mono bg-amber-950 px-2.5 py-0.5 rounded-lg border border-amber-700/80 shadow-sm">${t.tiempoTexto}</span>
-                        <span class="bg-amber-500 text-slate-950 text-[10px] px-2 py-0.5 rounded font-black tracking-wider flex-shrink-0 shadow">🟡 ${t.tituloBadge}</span>
+                        <span class="bg-amber-500 text-slate-950 text-[10px] px-2.5 py-0.5 rounded font-black tracking-wider flex-shrink-0 shadow">🟡 ${t.tituloBadge}</span>
                       </div>
                       <h4 class="text-base font-black text-white uppercase mb-1 tracking-wide">${t.nombre}</h4>
                       <p class="text-xs text-slate-100 leading-relaxed font-semibold line-clamp-3">${t.descripcion}</p>
