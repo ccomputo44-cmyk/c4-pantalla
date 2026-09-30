@@ -87,9 +87,15 @@
 
     <!-- TABLA DE ACTIVIDADES PROGRAMADAS -->
     <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
-      <h3 class="text-base font-black text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-        <span>📅</span> ACTIVIDADES PROGRAMADAS EN EL CALENDARIO
-      </h3>
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <h3 class="text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+          <span>📅</span> ACTIVIDADES PROGRAMADAS EN EL CALENDARIO
+        </h3>
+        <!-- BOTÓN BORRAR TODOS LOS REGISTROS -->
+        <button type="button" onclick="borrarTodasLasActividades()" id="btnBorrarTodo" class="bg-red-950/80 hover:bg-red-800 text-red-200 hover:text-white border border-red-700/80 font-black text-xs uppercase tracking-wider px-4 py-2 rounded-xl transition-all shadow-md flex items-center gap-2">
+          <span>🗑️</span> BORRAR TODOS LOS REGISTROS
+        </button>
+      </div>
 
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs">
@@ -267,6 +273,29 @@
         cargarActividadesTabla();
       } catch (err) {
         alert("Error al eliminar: " + err.message);
+      }
+    }
+
+    // BORRADO MASIVO DE ACTIVIDADES
+    async function borrarTodasLasActividades() {
+      const confirmacion = prompt("⚠️ ACCIÓN CRÍTICA:\nEsta acción eliminará permanentemente TODAS las actividades registradas.\n\nPara confirmar, escribe: BORRAR");
+      if (confirmacion !== "BORRAR") {
+        if (confirmacion !== null) alert("Operación cancelada.");
+        return;
+      }
+
+      const btn = document.getElementById('btnBorrarTodo');
+      const original = btn.innerHTML;
+      btn.innerHTML = '<span>⏳</span> Borrando...';
+
+      try {
+        await fetch(`${URL_FIREBASE}/actividades.json`, { method: 'DELETE' });
+        alert("Todos los registros han sido eliminados correctamente.");
+        cargarActividadesTabla();
+      } catch (err) {
+        alert("Error al borrar: " + err.message);
+      } finally {
+        btn.innerHTML = original;
       }
     }
 
