@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>C4 Monitoreo • Prevención Social del Delito</title>
   
-  <!-- TIPOGRAFÍA INSTITUCIONAL -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
@@ -63,7 +62,7 @@
     </div>
 
     <div class="flex items-center gap-4">
-      <div id="indicadorAudio" class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-3 py-1.5 rounded-xl font-bold flex items-center gap-2">
+      <div id="indicadorAudio" class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> SISTEMA C4 ACTIVO
       </div>
 
@@ -86,12 +85,12 @@
     <span id="conteoEnCursoBanner" class="text-xs font-black bg-black/60 border border-white/20 px-3 py-1 rounded-lg">0 ACTIVOS</span>
   </div>
 
-  <!-- CONTENEDOR PRINCIPAL AUTORRESPONSIVO PANORÁMICO -->
-  <main class="flex-1 p-4 md:p-6 w-full flex flex-col xl:flex-row gap-5 items-stretch">
+  <!-- CONTENEDOR PRINCIPAL: BITÁCORA Y ACTIVIDADES COMPACTAS -->
+  <main class="flex-1 p-4 md:p-6 w-full flex flex-col xl:flex-row gap-5 items-start">
 
-    <!-- COLUMNA IZQUIERDA: BITÁCORA DE CONCLUIDAS (ANCHO FIJO EFICIENTE) -->
+    <!-- COLUMNA IZQUIERDA: BITÁCORA DE CONCLUIDAS -->
     <div class="w-full xl:w-80 2xl:w-96 flex-shrink-0 flex flex-col">
-      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col h-full">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col">
         <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
@@ -102,7 +101,7 @@
           </span>
         </div>
 
-        <div id="listaFinalizadas" class="space-y-2.5 overflow-y-auto max-h-[80vh] pr-1 flex-1">
+        <div id="listaFinalizadas" class="space-y-2.5 overflow-y-auto max-h-[82vh] pr-1">
           <div class="py-16 text-center text-slate-500 text-xs">
             Sin actividades finalizadas en el turno.
           </div>
@@ -110,8 +109,8 @@
       </div>
     </div>
 
-    <!-- COLUMNA DERECHA: DESPLIEGUE OPERATIVO EN PANTALLA COMPLETA AUTOAJUSTABLE -->
-    <div class="flex-1 flex flex-col gap-4 min-w-0">
+    <!-- COLUMNA DERECHA: DESPLIEGUE OPERATIVO COMPACTO SIN ESTIRAMIENTO -->
+    <div class="flex-1 flex flex-col gap-4 min-w-0 w-full">
       
       <!-- HEADER OPERATIVO -->
       <div class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 flex flex-wrap items-center justify-between gap-3 shadow-lg">
@@ -131,13 +130,13 @@
         </div>
       </div>
 
-      <!-- CUADRÍCULA AUTOADAPTABLE (HASTA 4-5 COLUMNAS SEGÚN EL MONITOR) -->
-      <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-3.5 auto-rows-fr flex-1"></div>
+      <!-- CUADRÍCULA CON ALTURA PROPORCIONAL Y NATURAL -->
+      <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 items-start"></div>
     </div>
 
   </main>
 
-  <!-- MODAL TRANSLÚCIDO EXTRA PANORÁMICO (HASTA 4 COLUMNAS) -->
+  <!-- MODAL TRANSLÚCIDO EXTRA PANORÁMICO -->
   <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-3 md:p-6 transition-all duration-300">
     <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl w-[96vw] max-w-[1850px] p-5 md:p-7 shadow-2xl relative backdrop-blur-xl flex flex-col max-h-[92vh]">
       
@@ -291,7 +290,7 @@
         const data = await respuesta.json();
 
         if (!data || Object.keys(data).length === 0) {
-          grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500 text-base">No hay consignas registradas en Firebase.</div>`;
+          grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500 text-sm">No hay consignas registradas en Firebase.</div>`;
           badgeTotal.textContent = "ACTIVIDADES: 0";
           badgeEnCurso.textContent = "EN CURSO: 0";
           banner.classList.add('hidden');
@@ -357,7 +356,6 @@
               </div>
             `;
 
-            // REGLA ROJA: Mostrar 15 minutos en el modal
             let tiempoDesdeCierreMs = 0;
             if (act.timestampCierre) {
               tiempoDesdeCierreMs = msActuales - act.timestampCierre;
@@ -384,10 +382,9 @@
 
             const minutosFaltantesParaIniciar = minI - minutosActuales;
 
-            // 1. VERDE: EN CURSO
             if (esMismoDia && minutosActuales >= minI && minutosActuales <= minF) {
               estado = 'EN CURSO';
-              borderStyle = 'border-2 border-emerald-500 bg-slate-900 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/40';
+              borderStyle = 'border-2 border-emerald-500 bg-slate-900/90 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/40';
               badgeStyle = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 animate-pulse font-black';
               enCursoCount++;
 
@@ -399,24 +396,23 @@
                 descripcion: act.descripcion
               });
 
-            // 2. AMARILLO: ENTRA EN 15 MINUTOS
             } else if (esMismoDia && minutosFaltantesParaIniciar > 0 && minutosFaltantesParaIniciar <= 15) {
               estado = 'POR INICIAR';
-              borderStyle = 'border-2 border-amber-500/80 bg-slate-900 shadow-lg shadow-amber-500/10';
+              borderStyle = 'border-2 border-amber-500/80 bg-slate-900/90 shadow-lg shadow-amber-500/10';
               badgeStyle = 'bg-amber-500/20 text-amber-400 border border-amber-500/50 animate-pulse font-black';
 
               tarjetasEmergentes.push({
                 color: 'amarillo',
                 tituloBadge: `INICIA EN ${minutosFaltantesParaIniciar} MIN`,
-                tiempoTexto: `🕒 ${act.inicio} - ${act.fin}`,
+                tiempoTexto: `🕒 Programado: ${act.inicio} - ${act.fin}`,
                 nombre: act.nombre,
                 descripcion: act.descripcion
               });
             }
 
-            // TARJETA PRINCIPAL COMPACTA Y AUTOAJUSTABLE
+            // TARJETA COMPACTA DE ALTURA NATURAL (NO SE ESTIRA)
             cardsHtml += `
-              <div class="rounded-2xl p-4 border ${borderStyle} flex flex-col justify-between transition-all min-h-[160px] shadow-md hover:border-slate-600">
+              <div class="rounded-2xl p-4 border ${borderStyle} flex flex-col justify-between transition-all shadow-md hover:border-slate-600 bg-slate-900/90">
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-2.5">
                     <span class="text-xs font-mono font-black text-sky-400 bg-sky-950/80 px-2.5 py-1 rounded-lg border border-sky-800/60 shadow-sm">
@@ -430,8 +426,8 @@
                   <p class="text-xs text-slate-300 leading-relaxed line-clamp-3">${act.descripcion}</p>
                 </div>
 
-                <div class="pt-2.5 mt-2 border-t border-slate-800/80 flex justify-end">
-                  <button onclick="cerrarActividadManual('${act.id}', '${act.nombre}')" class="bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white px-3 py-1 rounded-lg font-black text-[11px] border border-slate-700 hover:border-emerald-500 transition-all flex items-center gap-1 shadow-sm">
+                <div class="pt-3 mt-3 border-t border-slate-800/80 flex justify-end">
+                  <button onclick="cerrarActividadManual('${act.id}', '${act.nombre}')" class="bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg font-black text-[11px] border border-slate-700 hover:border-emerald-500 transition-all flex items-center gap-1 shadow-sm">
                     <span>✓</span> Concluir
                   </button>
                 </div>
@@ -495,7 +491,7 @@
                     <div>
                       <div class="flex justify-between items-center text-xs font-black text-amber-300 mb-2 gap-2">
                         <span class="font-mono bg-amber-950 px-2.5 py-0.5 rounded-lg border border-amber-700/80 shadow-sm">${t.tiempoTexto}</span>
-                        <span class="bg-amber-500 text-slate-950 text-[10px] px-2 py-0.5 rounded font-black tracking-wider flex-shrink-0 shadow">🟡 ${t.tituloBadge}</span>
+                        <span class="bg-amber-500 text-slate-950 text-[10px] px-2.5 py-0.5 rounded font-black tracking-wider flex-shrink-0 shadow">🟡 ${t.tituloBadge}</span>
                       </div>
                       <h4 class="text-base font-black text-white uppercase mb-1 tracking-wide">${t.nombre}</h4>
                       <p class="text-xs text-slate-100 leading-relaxed font-semibold line-clamp-3">${t.descripcion}</p>
