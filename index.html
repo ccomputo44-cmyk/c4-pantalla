@@ -2,7 +2,7 @@
 <html lang="es" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>C4 Monitoreo • Prevención Social del Delito</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,8 +31,8 @@
       animation: entradaGlass 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
     }
     ::-webkit-scrollbar-track {
       background: rgba(15, 23, 42, 0.6);
@@ -44,113 +44,116 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none" onclick="desbloquearAudioSilencioso()" onkeydown="desbloquearAudioSilencioso()">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none overflow-x-hidden" onclick="desbloquearAudioSilencioso()" onkeydown="desbloquearAudioSilencioso()">
 
-  <!-- ENCABEZADO INSTITUCIONAL EXTRA GRANDE -->
-  <header class="border-b-2 border-slate-800 bg-slate-900/95 px-8 md:px-10 py-5 md:py-6 flex flex-wrap items-center justify-between gap-6 shadow-2xl sticky top-0 z-40 backdrop-blur-md">
-    <div class="flex items-center gap-5">
-      <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-slate-950/90 border-2 border-sky-500/60 p-2 flex items-center justify-center shadow-2xl shadow-sky-500/20 overflow-hidden flex-shrink-0">
+  <!-- ENCABEZADO INSTITUCIONAL RESPONSIVO -->
+  <header class="border-b-2 border-slate-800 bg-slate-900/95 px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 flex flex-wrap items-center justify-between gap-3 sm:gap-4 shadow-2xl sticky top-0 z-40 backdrop-blur-md">
+    <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+      <!-- LOGO CON ESCALA DINÁMICA -->
+      <div class="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-2xl bg-slate-950/90 border-2 border-sky-500/60 p-1.5 flex items-center justify-center shadow-xl shadow-sky-500/20 overflow-hidden flex-shrink-0">
         <img src="logo.png" 
              onerror="this.onerror=null; this.src='logo.jpg'; this.onerror=function(){this.src='logo.jpeg'; this.onerror=function(){this.src='logo.PNG';}};" 
              alt="Logo C4" 
              class="w-full h-full object-contain">
       </div>
-      <div>
-        <h1 class="text-2xl md:text-3xl xl:text-4xl font-black tracking-wider uppercase text-white drop-shadow-md">CENTRO DE CONTROL Y MONITOREO C4</h1>
-        <p class="text-base md:text-lg font-bold text-sky-300 tracking-wide mt-0.5">DIRECCIÓN DE PREVENCIÓN SOCIAL DEL DELITO</p>
+      <div class="min-w-0">
+        <h1 class="text-sm sm:text-lg lg:text-2xl font-black tracking-wider uppercase text-white truncate drop-shadow-md">CENTRO DE CONTROL Y MONITOREO C4</h1>
+        <p class="text-[11px] sm:text-xs lg:text-sm font-bold text-sky-300 tracking-wide truncate">DIRECCIÓN DE PREVENCIÓN SOCIAL DEL DELITO</p>
       </div>
     </div>
 
-    <div class="flex items-center gap-5">
-      <div id="indicadorAudio" class="bg-emerald-500/15 border-2 border-emerald-500/40 text-emerald-400 text-sm px-4 py-2.5 rounded-2xl font-black flex items-center gap-2.5 shadow-md">
-        <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span> SISTEMA C4 ACTIVO
+    <div class="flex items-center gap-2 sm:gap-3 flex-wrap ml-auto">
+      <div id="indicadorAudio" class="bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-[10px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> SISTEMA C4
       </div>
 
-      <div class="bg-slate-950 px-7 py-2.5 rounded-2xl border-2 border-slate-800 font-mono text-emerald-400 text-3xl md:text-4xl font-black tracking-widest shadow-2xl ring-1 ring-emerald-500/20" id="relojDigital">
+      <!-- RELOJ DIGITAL ADAPTABLE -->
+      <div class="bg-slate-950 px-3 sm:px-4 py-1.5 rounded-xl border border-slate-800 font-mono text-emerald-400 text-base sm:text-xl lg:text-2xl font-black tracking-widest shadow-inner" id="relojDigital">
         --:--:--
       </div>
 
-      <a href="admin/login.html" class="bg-slate-800 hover:bg-slate-700 text-sm px-5 py-3 rounded-2xl font-black text-slate-200 border-2 border-slate-700 flex items-center gap-2 transition-all shadow-lg hover:border-slate-500">
+      <a href="admin/login.html" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-xl font-bold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-all shadow">
         <span>🔐</span> Admin
       </a>
     </div>
   </header>
 
   <!-- BANNER DINÁMICO SUPERIOR -->
-  <div id="bannerAlertaActiva" class="hidden bg-slate-900 border-b-2 border-slate-700 text-white px-8 py-3 flex items-center justify-between shadow-2xl transition-all">
-    <div class="flex items-center gap-3">
-      <span id="bannerPuntoLuz" class="w-4 h-4 rounded-full bg-emerald-500 animate-ping"></span>
-      <span id="bannerTextoAlerta" class="text-sm md:text-base font-black tracking-widest uppercase drop-shadow">DESPLIEGUE OPERATIVO MONITOREADO</span>
+  <div id="bannerAlertaActiva" class="hidden bg-slate-900 border-b border-slate-700 text-white px-4 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-2 shadow-xl transition-all">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <span id="bannerPuntoLuz" class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+      <span id="bannerTextoAlerta" class="text-xs sm:text-sm font-black tracking-wider uppercase drop-shadow">DESPLIEGUE OPERATIVO MONITOREADO</span>
     </div>
-    <span id="conteoEnCursoBanner" class="text-sm font-black bg-black/60 border border-white/20 px-3 py-1 rounded-lg">0 ACTIVOS</span>
+    <span id="conteoEnCursoBanner" class="text-xs font-black bg-black/60 border border-white/20 px-2.5 py-0.5 rounded-lg">0 ACTIVOS</span>
   </div>
 
-  <!-- CONTENEDOR PRINCIPAL: BITÁCORA Y ACTIVIDADES COMPACTAS -->
-  <main class="flex-1 p-5 md:p-8 w-full flex flex-col xl:flex-row gap-6 items-start">
+  <!-- CONTENEDOR PRINCIPAL FLUIDO: RESPONSIVO EN CELULARES, TABLETS Y TV -->
+  <main class="flex-1 p-3 sm:p-5 lg:p-6 w-full max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-4 sm:gap-6 items-start">
 
-    <!-- COLUMNA IZQUIERDA: BITÁCORA DE CONCLUIDAS -->
-    <div class="w-full xl:w-80 2xl:w-96 flex-shrink-0 flex flex-col">
-      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col">
+    <!-- COLUMNA BITÁCORA DE CONCLUIDAS -->
+    <div class="w-full lg:w-72 xl:w-80 2xl:w-96 flex-shrink-0 flex flex-col">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col w-full">
         <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-            <h3 class="text-xs font-black text-slate-100 uppercase tracking-wider">Bitácora Concluidas</h3>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+            <h3 class="text-xs sm:text-sm font-black text-slate-100 uppercase tracking-wider">Bitácora Concluidas</h3>
           </div>
           <span id="conteoConcluidas" class="text-[11px] font-mono font-bold bg-slate-800 text-emerald-400 px-2 py-0.5 rounded-lg border border-slate-700">
             0 FINALIZADAS
           </span>
         </div>
 
-        <div id="listaFinalizadas" class="space-y-2.5 overflow-y-auto max-h-[80vh] pr-1">
-          <div class="py-16 text-center text-slate-500 text-xs">
+        <div id="listaFinalizadas" class="space-y-2.5 overflow-y-auto max-h-[40vh] lg:max-h-[75vh] pr-1">
+          <div class="py-10 text-center text-slate-500 text-xs">
             Sin actividades finalizadas en el turno.
           </div>
         </div>
       </div>
     </div>
 
-    <!-- COLUMNA DERECHA: DESPLIEGUE OPERATIVO -->
-    <div class="flex-1 flex flex-col gap-5 min-w-0 w-full">
-      <div class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 flex flex-wrap items-center justify-between gap-3 shadow-lg">
+    <!-- ÁREA PRINCIPAL: DESPLIEGUE OPERATIVO AUTORESPONSIVO -->
+    <div class="flex-1 flex flex-col gap-4 min-w-0 w-full">
+      
+      <!-- HEADER DE PROGRAMACIÓN -->
+      <div class="bg-slate-900/70 rounded-2xl p-3.5 sm:p-4 border border-slate-800 flex flex-wrap items-center justify-between gap-3 shadow-lg">
         <div>
-          <h2 class="text-base md:text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
+          <h2 class="text-sm sm:text-base lg:text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
             PROGRAMACIÓN OPERATIVA: <span id="textoDiaActual" class="text-sky-400 underline decoration-sky-500 decoration-2">HOY</span>
           </h2>
-          <p class="text-xs text-slate-400 font-medium">Despliegue asignado en tiempo real. Cierre manual disponible.</p>
+          <p class="text-[11px] sm:text-xs text-slate-400 font-medium">Despliegue asignado en tiempo real. Cierre manual disponible.</p>
         </div>
-        <div class="flex items-center gap-2.5 font-black">
-          <span id="contadorTotalHoy" class="bg-slate-950 border border-slate-700 px-3 py-1.5 rounded-xl text-slate-200 font-mono text-xs shadow">
-            ACTIVIDADES: 0
+        <div class="flex items-center gap-2 font-black ml-auto sm:ml-0">
+          <span id="contadorTotalHoy" class="bg-slate-950 border border-slate-700 px-2.5 sm:px-3 py-1 rounded-xl text-slate-200 font-mono text-xs shadow">
+            TOTAL: 0
           </span>
-          <span id="contadorEnVivoHoy" class="bg-emerald-950/80 border-2 border-emerald-600/70 px-3.5 py-1.5 rounded-xl text-emerald-400 font-mono text-xs shadow">
+          <span id="contadorEnVivoHoy" class="bg-emerald-950/80 border border-emerald-600/70 px-3 py-1 rounded-xl text-emerald-400 font-mono text-xs shadow">
             EN CURSO: 0
           </span>
         </div>
       </div>
 
-      <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 items-start"></div>
+      <!-- CUADRÍCULA ADAPTABLE MULTI-DISPOSITIVO -->
+      <div id="gridActividades" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 items-start w-full"></div>
     </div>
 
   </main>
 
-  <!-- MODAL TRANSLÚCIDO CON ANCHO AUTOAJUSTABLE A LAS TARJETAS -->
-  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4 md:p-8 transition-all duration-300">
-    <!-- El contenedor usa max-content con límite en 96vw para que nunca sobre espacio a la derecha -->
-    <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl w-auto max-w-[96vw] p-5 md:p-7 shadow-2xl relative backdrop-blur-xl flex flex-col max-h-[92vh]">
+  <!-- MODAL TRANSLÚCIDO AUTORESPONSIVO (CELULAR, TABLET Y TV) -->
+  <div id="modalAlerta" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 transition-all duration-300">
+    <div class="modal-animado bg-slate-950/95 border-2 border-slate-700 rounded-3xl w-[95vw] sm:w-auto max-w-[96vw] p-4 sm:p-6 shadow-2xl relative backdrop-blur-xl flex flex-col max-h-[92vh]">
       
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3.5 mb-5 flex-shrink-0 gap-6">
-        <div class="flex items-center gap-3.5">
-          <span class="w-4 h-4 rounded-full bg-amber-400 animate-ping"></span>
-          <h3 class="text-lg md:text-xl font-black text-white uppercase tracking-wider">MONITOR DE ESTADO OPERATIVO C4</h3>
-          <span id="badgeTotalEmergentes" class="text-xs md:text-sm font-mono font-black bg-slate-800 text-sky-300 px-3 py-1 rounded-xl border border-slate-700">0 EVENTOS</span>
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4 flex-shrink-0 gap-3">
+        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+          <span class="w-3.5 h-3.5 rounded-full bg-amber-400 animate-ping flex-shrink-0"></span>
+          <h3 class="text-xs sm:text-sm md:text-lg font-black text-white uppercase tracking-wider truncate">ESTADO OPERATIVO C4</h3>
+          <span id="badgeTotalEmergentes" class="text-[10px] sm:text-xs font-mono font-bold bg-slate-800 text-sky-300 px-2 py-0.5 rounded-lg border border-slate-700 flex-shrink-0">0</span>
         </div>
-        <button onclick="pausarAlertaUnMinuto()" class="text-xs md:text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-2 rounded-xl font-black border border-slate-700 transition-all flex items-center gap-2 shadow">
-          <span>⏸</span> Minimizar (Reabre en 1 min) [✕]
+        <button onclick="pausarAlertaUnMinuto()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 sm:px-4 py-1.5 rounded-xl font-bold border border-slate-700 transition-all flex items-center gap-1.5 shadow flex-shrink-0">
+          <span>⏸</span> <span class="hidden sm:inline">Minimizar</span> (1 min) [✕]
         </button>
       </div>
 
-      <!-- El id se mantiene y las columnas se ajustan con JS según la cantidad exacta -->
-      <div id="contenedorAlertasModal" class="overflow-y-auto pr-1 flex-1 gap-4 auto-rows-max"></div>
+      <div id="contenedorAlertasModal" class="overflow-y-auto pr-1 flex-1 gap-3 sm:gap-4 auto-rows-max w-full"></div>
     </div>
   </div>
 
@@ -289,8 +292,8 @@
         const data = await respuesta.json();
 
         if (!data || Object.keys(data).length === 0) {
-          grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500 text-sm">No hay consignas registradas en Firebase.</div>`;
-          badgeTotal.textContent = "ACTIVIDADES: 0";
+          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-sm">No hay consignas registradas en Firebase.</div>`;
+          badgeTotal.textContent = "TOTAL: 0";
           badgeEnCurso.textContent = "EN CURSO: 0";
           banner.classList.add('hidden');
           modal.classList.add('hidden');
@@ -410,22 +413,22 @@
             }
 
             cardsHtml += `
-              <div class="rounded-2xl p-4 border ${borderStyle} flex flex-col justify-between transition-all shadow-md hover:border-slate-600 bg-slate-900/90">
+              <div class="rounded-2xl p-3.5 sm:p-4 border ${borderStyle} flex flex-col justify-between transition-all shadow-md hover:border-slate-600 bg-slate-900/90 w-full">
                 <div>
-                  <div class="flex items-center justify-between gap-2 mb-2.5">
-                    <span class="text-xs font-mono font-black text-sky-400 bg-sky-950/80 px-2.5 py-1 rounded-lg border border-sky-800/60 shadow-sm">
+                  <div class="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                    <span class="text-[11px] sm:text-xs font-mono font-black text-sky-400 bg-sky-950/80 px-2 py-0.5 rounded-lg border border-sky-800/60 shadow-sm">
                       🕒 ${act.inicio} - ${act.fin}
                     </span>
                     <span class="text-[10px] uppercase px-2 py-0.5 rounded-md font-black tracking-wider ${badgeStyle}">
                       ${estado}
                     </span>
                   </div>
-                  <h3 class="text-base font-black text-white uppercase tracking-wide mb-1.5 truncate">${act.nombre}</h3>
-                  <p class="text-xs text-slate-300 leading-relaxed line-clamp-3">${act.descripcion}</p>
+                  <h3 class="text-sm sm:text-base font-black text-white uppercase tracking-wide mb-1 truncate">${act.nombre}</h3>
+                  <p class="text-xs text-slate-300 leading-relaxed line-clamp-2 sm:line-clamp-3">${act.descripcion}</p>
                 </div>
 
-                <div class="pt-3 mt-3 border-t border-slate-800/80 flex justify-end">
-                  <button onclick="cerrarActividadManual('${act.id}', '${act.nombre}')" class="bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg font-black text-[11px] border border-slate-700 hover:border-emerald-500 transition-all flex items-center gap-1 shadow-sm">
+                <div class="pt-2.5 mt-2.5 border-t border-slate-800/80 flex justify-end">
+                  <button onclick="cerrarActividadManual('${act.id}', '${act.nombre}')" class="bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white px-3 py-1 rounded-lg font-black text-[11px] border border-slate-700 hover:border-emerald-500 transition-all flex items-center gap-1 shadow-sm">
                     <span>✓</span> Concluir
                   </button>
                 </div>
@@ -434,89 +437,87 @@
           }
         });
 
-        grid.innerHTML = cardsHtml || `<div class="col-span-full py-16 text-center text-slate-500 text-sm">No hay operativos pendientes ni en curso.</div>`;
+        grid.innerHTML = cardsHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm">No hay operativos pendientes ni en curso.</div>`;
         
         if (totalFinalizadas > 0) {
           listaFin.innerHTML = finalizadasHtml;
         } else {
-          listaFin.innerHTML = `<div class="py-16 text-center text-slate-500 text-xs">Sin actividades finalizadas en el turno.</div>`;
+          listaFin.innerHTML = `<div class="py-10 text-center text-slate-500 text-xs">Sin actividades finalizadas en el turno.</div>`;
         }
         conteoFin.textContent = `${totalFinalizadas} FINALIZADAS`;
 
-        badgeTotal.textContent = `ACTIVIDADES: ${actividadesDelDia.length}`;
+        badgeTotal.textContent = `TOTAL: ${actividadesDelDia.length}`;
         badgeEnCurso.textContent = `EN CURSO: ${enCursoCount}`;
 
         if (enCursoCount > 0) {
           banner.classList.remove('hidden');
-          banner.className = "bg-emerald-600 text-white px-8 py-3 border-b-2 border-emerald-400 flex items-center justify-between shadow-2xl animate-pulse";
-          bannerLuz.className = "w-4 h-4 rounded-full bg-white animate-ping";
+          banner.className = "bg-emerald-600 text-white px-4 sm:px-6 py-2 border-b border-emerald-400 flex flex-wrap items-center justify-between gap-2 shadow-2xl animate-pulse";
+          bannerLuz.className = "w-3 h-3 rounded-full bg-white animate-ping";
           bannerTexto.textContent = "DESPLIEGUE OPERATIVO ACTIVO EN ESTE MOMENTO";
           conteoBanner.textContent = `${enCursoCount} EN CURSO`;
         } else if (tarjetasEmergentes.some(t => t.color === 'amarillo')) {
           banner.classList.remove('hidden');
-          banner.className = "bg-amber-600 text-white px-8 py-3 border-b-2 border-amber-400 flex items-center justify-between shadow-2xl";
-          bannerLuz.className = "w-4 h-4 rounded-full bg-white animate-ping";
+          banner.className = "bg-amber-600 text-white px-4 sm:px-6 py-2 border-b border-amber-400 flex flex-wrap items-center justify-between gap-2 shadow-2xl";
+          bannerLuz.className = "w-3 h-3 rounded-full bg-white animate-ping";
           bannerTexto.textContent = "OPERATIVO PRÓXIMO A INICIAR (EN MENOS DE 15 MIN)";
           conteoBanner.textContent = `PREPARACIÓN`;
         } else {
           banner.classList.add('hidden');
         }
 
-        // VENTANA EMERGENTE AUTOAJUSTABLE A LA CANTIDAD EXACTA DE TARJETAS
+        // VENTANA EMERGENTE MULTIDISPOSITIVO (1 COLUMNA EN MÓVIL, HASTA 4 EN PANTALLAS ANCHAS)
         if (tarjetasEmergentes.length > 0) {
           const totalCards = tarjetasEmergentes.length;
-          badgeTotalEmergentes.textContent = `${totalCards} EVENTOS`;
+          badgeTotalEmergentes.textContent = `${totalCards}`;
 
           if (Date.now() >= pausaTemporalHasta) {
             modal.classList.remove('hidden');
 
-            // CLASES DE COLUMNAS SEGÚN EL NÚMERO DE EVENTOS
-            let claseGrid = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4';
+            let claseGrid = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4';
             if (totalCards === 1) {
-              claseGrid = 'grid grid-cols-1 w-[420px] max-w-full gap-4';
+              claseGrid = 'grid grid-cols-1 w-full sm:w-[420px] gap-3 sm:gap-4';
             } else if (totalCards === 2) {
-              claseGrid = 'grid grid-cols-1 md:grid-cols-2 w-[840px] max-w-full gap-4';
+              claseGrid = 'grid grid-cols-1 sm:grid-cols-2 w-full sm:w-[840px] gap-3 sm:gap-4';
             } else if (totalCards === 3) {
-              // 3 columnas exactas que llenan perfectamente el cuadro sin huecos vacíos
-              claseGrid = 'grid grid-cols-1 md:grid-cols-3 w-[1260px] max-w-full gap-4';
+              claseGrid = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full sm:w-[1200px] gap-3 sm:gap-4';
             }
 
-            contModal.className = `overflow-y-auto pr-1 flex-1 ${claseGrid} auto-rows-max`;
+            contModal.className = `overflow-y-auto pr-1 flex-1 ${claseGrid} auto-rows-max w-full`;
 
             contModal.innerHTML = tarjetasEmergentes.map(t => {
               if (t.color === 'verde') {
                 return `
-                  <div class="p-4 bg-emerald-950/85 border-2 border-emerald-500 rounded-2xl shadow-xl flex flex-col justify-between">
+                  <div class="p-3.5 sm:p-4 bg-emerald-950/85 border-2 border-emerald-500 rounded-2xl shadow-xl flex flex-col justify-between">
                     <div>
-                      <div class="flex justify-between items-center text-xs font-black text-emerald-300 mb-2 gap-2">
-                        <span class="font-mono bg-emerald-950 px-2.5 py-0.5 rounded-lg border border-emerald-700/80 shadow-sm">${t.tiempoTexto}</span>
+                      <div class="flex justify-between items-center text-[11px] sm:text-xs font-black text-emerald-300 mb-2 gap-2 flex-wrap">
+                        <span class="font-mono bg-emerald-950 px-2 py-0.5 rounded-lg border border-emerald-700/80 shadow-sm">${t.tiempoTexto}</span>
                         <span class="bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded font-black tracking-wider flex-shrink-0 shadow">🟢 ${t.tituloBadge}</span>
                       </div>
-                      <h4 class="text-base font-black text-white uppercase mb-1 tracking-wide">${t.nombre}</h4>
+                      <h4 class="text-sm sm:text-base font-black text-white uppercase mb-1 tracking-wide truncate">${t.nombre}</h4>
                       <p class="text-xs text-slate-100 leading-relaxed font-semibold line-clamp-3">${t.descripcion}</p>
                     </div>
                   </div>`;
               } else if (t.color === 'amarillo') {
                 return `
-                  <div class="p-4 bg-amber-950/85 border-2 border-amber-500 rounded-2xl shadow-xl flex flex-col justify-between">
+                  <div class="p-3.5 sm:p-4 bg-amber-950/85 border-2 border-amber-500 rounded-2xl shadow-xl flex flex-col justify-between">
                     <div>
-                      <div class="flex justify-between items-center text-xs font-black text-amber-300 mb-2 gap-2">
-                        <span class="font-mono bg-amber-950 px-2.5 py-0.5 rounded-lg border border-amber-700/80 shadow-sm">${t.tiempoTexto}</span>
-                        <span class="bg-amber-500 text-slate-950 text-[10px] px-2.5 py-0.5 rounded font-black tracking-wider flex-shrink-0 shadow">🟡 ${t.tituloBadge}</span>
+                      <div class="flex justify-between items-center text-[11px] sm:text-xs font-black text-amber-300 mb-2 gap-2 flex-wrap">
+                        <span class="font-mono bg-amber-950 px-2 py-0.5 rounded-lg border border-amber-700/80 shadow-sm">${t.tiempoTexto}</span>
+                        <span class="bg-amber-500 text-slate-950 text-[10px] px-2 py-0.5 rounded font-black tracking-wider flex-shrink-0 shadow">🟡 ${t.tituloBadge}</span>
                       </div>
-                      <h4 class="text-base font-black text-white uppercase mb-1 tracking-wide">${t.nombre}</h4>
+                      <h4 class="text-sm sm:text-base font-black text-white uppercase mb-1 tracking-wide truncate">${t.nombre}</h4>
                       <p class="text-xs text-slate-100 leading-relaxed font-semibold line-clamp-3">${t.descripcion}</p>
                     </div>
                   </div>`;
               } else {
                 return `
-                  <div class="p-4 bg-red-950/85 border-2 border-red-500 rounded-2xl shadow-xl flex flex-col justify-between">
+                  <div class="p-3.5 sm:p-4 bg-red-950/85 border-2 border-red-500 rounded-2xl shadow-xl flex flex-col justify-between">
                     <div>
-                      <div class="flex justify-between items-center text-xs font-black text-red-300 mb-2 gap-2">
-                        <span class="font-mono bg-red-950 px-2.5 py-0.5 rounded-lg border border-red-700/80 shadow-sm">${t.tiempoTexto}</span>
+                      <div class="flex justify-between items-center text-[11px] sm:text-xs font-black text-red-300 mb-2 gap-2 flex-wrap">
+                        <span class="font-mono bg-red-950 px-2 py-0.5 rounded-lg border border-red-700/80 shadow-sm">${t.tiempoTexto}</span>
                         <span class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-black tracking-wider flex-shrink-0 shadow">🔴 ${t.tituloBadge}</span>
                       </div>
-                      <h4 class="text-base font-black text-white uppercase mb-1 tracking-wide">${t.nombre}</h4>
+                      <h4 class="text-sm sm:text-base font-black text-white uppercase mb-1 tracking-wide truncate">${t.nombre}</h4>
                       <p class="text-xs text-slate-100 leading-relaxed font-semibold line-clamp-3">${t.descripcion}</p>
                     </div>
                   </div>`;
