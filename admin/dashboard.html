@@ -19,13 +19,13 @@
       </div>
       <div>
         <h1 class="text-sm md:text-base font-black uppercase tracking-wider text-white">MÓDULO DE GESTIÓN Y CAPTURA C4</h1>
-        <p class="text-xs text-sky-400 font-bold">Panel Administrativo </p>
+        <p class="text-xs text-sky-400 font-bold">Panel Administrativo de Consignas y Bitácora</p>
       </div>
     </div>
 
     <div class="flex items-center gap-3">
       <a href="../index.html" class="bg-slate-800 hover:bg-slate-700 text-xs px-3.5 py-2 rounded-xl font-bold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-all shadow">
-        <span>📺</span> Ver Monitor Principal
+        <span>📺</span> Ver Monitor de TV
       </a>
       <button onclick="cerrarSesion()" class="bg-red-950 hover:bg-red-900 text-xs px-3.5 py-2 rounded-xl font-bold text-red-300 border border-red-700/80 transition-all shadow">
         Cerrar Sesión
@@ -35,7 +35,7 @@
 
   <main class="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
 
-    <!-- FORMULARIO DE CAPTURA DE CONSIGNAS -->
+    <!-- FORMULARIO DE CAPTURA MANUAL -->
     <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
       <h2 class="text-base font-black text-white uppercase tracking-wider mb-5 flex items-center gap-2">
         <span>📋</span> CAPTURA MANUAL DE DESPLIEGUE OPERATIVO
@@ -68,7 +68,7 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Nombre de la Actividad</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Nombre de la Actividad / Consigna</label>
           <input type="text" id="inputNombre" required placeholder="Ej: Operativo Comercio Seguro"
                  class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 outline-none">
         </div>
@@ -85,10 +85,10 @@
       </form>
     </div>
 
-    <!-- TABLA DE ACTIVIDADES PROGRAMADAS EN EL CALENDARIO -->
+    <!-- TABLA DE ACTIVIDADES PROGRAMADAS -->
     <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
       <h3 class="text-base font-black text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-        <span>📅</span> ACTIVIDADES PROGRAMADAS 
+        <span>📅</span> ACTIVIDADES PROGRAMADAS EN EL CALENDARIO
       </h3>
 
       <div class="overflow-x-auto">
@@ -111,16 +111,53 @@
       </div>
     </div>
 
-    <!-- BITÁCORA Y BOTÓN DE EXPORTACIÓN A EXCEL CSV -->
-    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <h3 class="text-base font-black text-white uppercase tracking-wider">BITÁCORA DE EVENTOS Y REPORTES</h3>
-        <p class="text-xs text-slate-400 mt-0.5">Historial operativo  para auditoría y rendición de datos.</p>
+    <!-- MÓDULO DE EXPORTACIÓN (MENSUAL / POR DÍA) -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base font-black text-white uppercase tracking-wider">EXPORTACIÓN DE BITÁCORA Y REPORTES</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Genera archivos oficiales compatibles con Microsoft Excel y Google Sheets.</p>
+        </div>
       </div>
 
-      <button type="button" onclick="exportarBitacoraCSV()" id="btnExportarCSV" class="bg-sky-600 hover:bg-sky-500 text-white font-black text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-lg shadow-sky-600/30 transition-all flex items-center gap-2">
-        <span>📥</span> DESCARGAR REPORTE DE ACTIVIDADES (EXCEL CSV)
-      </button>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+        <!-- SELECTOR DE FILTRO -->
+        <div class="md:col-span-4">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Tipo de Reporte</label>
+          <select id="tipoExportacion" onchange="alternarFiltroDia()" class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+            <option value="todos">Reporte Completo / Mensual (Todo el histórico)</option>
+            <option value="diaSemana">Filtrar por Día de la Semana</option>
+            <option value="fechaEspecifica">Filtrar por Fecha Específica (AAAA-MM-DD)</option>
+          </select>
+        </div>
+
+        <!-- SELECTOR DE DÍA DE LA SEMANA -->
+        <div id="contenedorDiaSemana" class="hidden md:col-span-4">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Seleccionar Día</label>
+          <select id="selectFiltroDia" class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+            <option value="Lunes">Lunes</option>
+            <option value="Martes">Martes</option>
+            <option value="Miércoles">Miércoles</option>
+            <option value="Jueves">Jueves</option>
+            <option value="Viernes">Viernes</option>
+            <option value="Sábado">Sábado</option>
+            <option value="Domingo">Domingo</option>
+          </select>
+        </div>
+
+        <!-- SELECTOR DE FECHA CALENDARIO -->
+        <div id="contenedorFecha" class="hidden md:col-span-4">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Fecha del Operativo</label>
+          <input type="date" id="inputFiltroFecha" class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2 text-xs text-white outline-none font-mono">
+        </div>
+
+        <!-- BOTÓN DE DESCARGA -->
+        <div class="md:col-span-4">
+          <button type="button" onclick="exportarBitacoraParametrizada()" id="btnExportarCSV" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-black text-xs uppercase tracking-wider py-3 rounded-xl shadow-lg shadow-sky-600/30 transition-all flex items-center justify-center gap-2">
+            <span>📥</span> DESCARGAR REPORTE (EXCEL CSV)
+          </button>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -128,7 +165,7 @@
   <script>
     const URL_FIREBASE = "https://c4-monitoreo-8d236-default-rtdb.firebaseio.com";
 
-    // Protección de sesión
+    // Verificación de acceso
     if (!sessionStorage.getItem('c4_autenticado')) {
       window.location.href = 'login.html';
     }
@@ -138,7 +175,25 @@
       window.location.href = 'login.html';
     }
 
-    // 1. Guardar Actividad
+    function normalizarTexto(txt) {
+      return (txt || '').toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    }
+
+    function alternarFiltroDia() {
+      const modo = document.getElementById('tipoExportacion').value;
+      const cDia = document.getElementById('contenedorDiaSemana');
+      const cFecha = document.getElementById('contenedorFecha');
+
+      cDia.classList.add('hidden');
+      cFecha.classList.add('hidden');
+
+      if (modo === 'diaSemana') {
+        cDia.classList.remove('hidden');
+      } else if (modo === 'fechaEspecifica') {
+        cFecha.classList.remove('hidden');
+      }
+    }
+
     async function guardarActividad(e) {
       e.preventDefault();
       const btn = document.getElementById('btnGuardar');
@@ -165,13 +220,12 @@
         document.getElementById('inputDescripcion').value = '';
         cargarActividadesTabla();
       } catch (err) {
-        alert("Error al guardar en Firebase: " + err.message);
+        alert("Error al guardar: " + err.message);
       } finally {
         btn.innerHTML = original;
       }
     }
 
-    // 2. Cargar tabla
     async function cargarActividadesTabla() {
       const tbody = document.getElementById('tablaActividades');
       try {
@@ -179,7 +233,7 @@
         const data = await res.json();
 
         if (!data || Object.keys(data).length === 0) {
-          tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No hay actividades programadas.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No hay actividades registradas en el sistema.</td></tr>`;
           return;
         }
 
@@ -187,10 +241,10 @@
           const item = data[k];
           return `
             <tr class="hover:bg-slate-900/60">
-              <td class="p-3 font-bold text-sky-400">${item.dia}</td>
-              <td class="p-3 font-mono text-emerald-400 font-bold">${item.inicio} - ${item.fin}</td>
-              <td class="p-3 font-black uppercase text-white">${item.nombre}</td>
-              <td class="p-3 text-slate-300 max-w-xs truncate">${item.descripcion}</td>
+              <td class="p-3 font-bold text-sky-400">${item.dia || ''}</td>
+              <td class="p-3 font-mono text-emerald-400 font-bold">${item.inicio || ''} - ${item.fin || ''}</td>
+              <td class="p-3 font-black uppercase text-white">${item.nombre || ''}</td>
+              <td class="p-3 text-slate-300 max-w-xs truncate">${item.descripcion || ''}</td>
               <td class="p-3 text-right">
                 <button onclick="eliminarActividad('${k}')" class="bg-red-950/80 hover:bg-red-900 text-red-400 px-2.5 py-1 rounded-lg border border-red-700/60 font-black text-[11px]">
                   Eliminar
@@ -202,11 +256,10 @@
 
         tbody.innerHTML = filas;
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-400">Error al leer datos.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-400">Error al leer datos de Firebase.</td></tr>`;
       }
     }
 
-    // 3. Eliminar
     async function eliminarActividad(id) {
       if (!confirm("¿Deseas eliminar este registro operativo?")) return;
       try {
@@ -217,84 +270,120 @@
       }
     }
 
-    // 4. Exportar a CSV para Excel con UTF-8
-    async function exportarBitacoraCSV() {
+    async function exportarBitacoraParametrizada() {
       const btn = document.getElementById('btnExportarCSV');
-      const textoOriginal = btn ? btn.innerHTML : '';
-      if (btn) btn.innerHTML = '<span>⏳</span> Generando reporte...';
+      const textoOriginal = btn.innerHTML;
+      btn.innerHTML = '<span>⏳</span> Procesando reporte...';
+
+      const modo = document.getElementById('tipoExportacion').value;
+      const diaSeleccionado = normalizarTexto(document.getElementById('selectFiltroDia').value);
+      const fechaSeleccionada = document.getElementById('inputFiltroFecha').value;
 
       try {
-        let res = await fetch(`${URL_FIREBASE}/bitacora.json`);
-        let data = await res.json();
-        let registros = [];
+        const [resAct, resBit] = await Promise.all([
+          fetch(`${URL_FIREBASE}/actividades.json`),
+          fetch(`${URL_FIREBASE}/bitacora.json`)
+        ]);
 
-        if (data && Object.keys(data).length > 0) {
-          registros = Object.keys(data).map(k => ({ id: k, ...data[k] }));
-        } else {
-          const resAct = await fetch(`${URL_FIREBASE}/actividades.json`);
-          const dataAct = await resAct.json();
-          if (dataAct && Object.keys(dataAct).length > 0) {
-            registros = Object.keys(dataAct).map(k => {
-              const item = dataAct[k];
-              return {
-                folio: `ACT-${k.slice(-6)}`,
-                fecha: new Date().toLocaleDateString('es-MX'),
-                dia: item.dia || item.diaSemana || '',
-                inicio: item.inicio || item.horaInicio || '',
-                fin: item.fin || item.horaTermino || '',
-                nombre: item.nombre || item.actividad || '',
-                descripcion: item.descripcion || item.detalles || '',
-                estado: 'REGISTRADO'
-              };
+        const dataAct = await resAct.json();
+        const dataBit = await resBit.json();
+
+        let consolidado = [];
+
+        if (dataAct) {
+          Object.keys(dataAct).forEach(k => {
+            const item = dataAct[k];
+            consolidado.push({
+              folio: `ACT-${k.slice(-6)}`,
+              fecha: item.fechaCreacion ? item.fechaCreacion.slice(0, 10) : new Date().toISOString().slice(0, 10),
+              dia: item.dia || '',
+              inicio: item.inicio || '',
+              fin: item.fin || '',
+              nombre: item.nombre || '',
+              descripcion: item.descripcion || '',
+              estado: item.cerradaManualmente ? 'CONCLUIDA MANUALMENTE' : 'PROGRAMADA/ACTIVA'
             });
-          }
+          });
         }
 
-        if (registros.length === 0) {
-          alert("No hay registros ni actividades en el sistema para exportar.");
-          if (btn) btn.innerHTML = textoOriginal;
+        if (dataBit) {
+          Object.keys(dataBit).forEach(k => {
+            const b = dataBit[k];
+            consolidado.push({
+              folio: `BIT-${k.slice(-6)}`,
+              fecha: b.fecha || new Date().toISOString().slice(0, 10),
+              dia: b.dia || 'N/A',
+              inicio: b.horaCierre || '',
+              fin: b.horaCierre || '',
+              nombre: b.nombre || 'EVENTO BITACORA',
+              descripcion: `Cierre: ${b.tipoCierre || 'AUTOMÁTICO'}`,
+              estado: 'CONCLUIDA'
+            });
+          });
+        }
+
+        if (consolidado.length === 0) {
+          alert("No se encontraron registros en la base de datos.");
+          btn.innerHTML = textoOriginal;
           return;
         }
 
-        const encabezados = ["FOLIO", "FECHA", "DIA", "HORA_INICIO", "HORA_TERMINO", "ACTIVIDAD_CONSIGNA", "DESCRIPCION_DETALLES", "ESTADO"];
+        let resultadosFiltrados = consolidado;
+        let sufijoArchivo = "Mensual_Completo";
+
+        if (modo === 'diaSemana') {
+          resultadosFiltrados = consolidado.filter(r => normalizarTexto(r.dia) === diaSeleccionado);
+          sufijoArchivo = `Dia_${document.getElementById('selectFiltroDia').value}`;
+        } else if (modo === 'fechaEspecifica') {
+          if (!fechaSeleccionada) {
+            alert("Por favor selecciona una fecha en el calendario.");
+            btn.innerHTML = textoOriginal;
+            return;
+          }
+          resultadosFiltrados = consolidado.filter(r => r.fecha.includes(fechaSeleccionada));
+          sufijoArchivo = `Fecha_${fechaSeleccionada}`;
+        }
+
+        if (resultadosFiltrados.length === 0) {
+          alert(`No se encontraron registros para el criterio seleccionado (${sufijoArchivo}).`);
+          btn.innerHTML = textoOriginal;
+          return;
+        }
+
+        const cabeceras = ["FOLIO", "FECHA", "DIA_SEMANA", "HORA_INICIO", "HORA_TERMINO", "ACTIVIDAD_OPERATIVA", "DESCRIPCION", "ESTADO"];
         
-        const filas = registros.map(r => {
-          const folio = `"${(r.folio || r.id || '').toString().replace(/"/g, '""')}"`;
-          const fecha = `"${(r.fecha || '').toString().replace(/"/g, '""')}"`;
-          const dia = `"${(r.dia || '').toString().replace(/"/g, '""')}"`;
-          const inicio = `"${(r.inicio || r.horaInicio || '').toString().replace(/"/g, '""')}"`;
-          const fin = `"${(r.fin || r.horaTermino || '').toString().replace(/"/g, '""')}"`;
-          const nombre = `"${(r.nombre || r.actividad || '').toString().replace(/"/g, '""')}"`;
-          const descripcion = `"${(r.descripcion || '').toString().replace(/"/g, '""')}"`;
-          const estado = `"${(r.estado || 'CONCLUIDO').toString().replace(/"/g, '""')}"`;
+        const lineas = resultadosFiltrados.map(r => [
+          `"${(r.folio || '').replace(/"/g, '""')}"`,
+          `"${(r.fecha || '').replace(/"/g, '""')}"`,
+          `"${(r.dia || '').replace(/"/g, '""')}"`,
+          `"${(r.inicio || '').replace(/"/g, '""')}"`,
+          `"${(r.fin || '').replace(/"/g, '""')}"`,
+          `"${(r.nombre || '').replace(/"/g, '""')}"`,
+          `"${(r.descripcion || '').replace(/"/g, '""')}"`,
+          `"${(r.estado || '').replace(/"/g, '""')}"`
+        ].join(","));
 
-          return [folio, fecha, dia, inicio, fin, nombre, descripcion, estado].join(",");
-        });
+        const contenidoFinal = "\uFEFF" + [cabeceras.join(","), ...lineas].join("\r\n");
 
-        // BOM UTF-8 (\uFEFF) para compatibilidad con acentos en Excel
-        const contenidoCSV = "\uFEFF" + [encabezados.join(","), ...filas].join("\r\n");
-
-        const blob = new Blob([contenidoCSV], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
+        const blob = new Blob([contenidoFinal], { type: "text/csv;charset=utf-8;" });
         const enlace = document.createElement("a");
-        const fechaArchivo = new Date().toISOString().slice(0, 10);
-        
-        enlace.setAttribute("href", url);
-        enlace.setAttribute("download", `Bitacora_C4_Reporte_${fechaArchivo}.csv`);
+        enlace.href = URL.createObjectURL(blob);
+        enlace.download = `Reporte_C4_${sufijoArchivo}_${new Date().toISOString().slice(0, 10)}.csv`;
         document.body.appendChild(enlace);
         enlace.click();
         document.body.removeChild(enlace);
-        URL.revokeObjectURL(url);
 
-      } catch (error) {
-        console.error("Error al exportar bitácora:", error);
-        alert("Ocurrió un error al generar el archivo CSV.");
+      } catch (err) {
+        alert("Error al procesar la exportación: " + err.message);
       } finally {
-        if (btn) btn.innerHTML = textoOriginal;
+        btn.innerHTML = textoOriginal;
       }
     }
 
-    document.addEventListener('DOMContentLoaded', cargarActividadesTabla);
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarActividadesTabla();
+      document.getElementById('inputFiltroFecha').value = new Date().toISOString().slice(0, 10);
+    });
   </script>
 </body>
 </html>
