@@ -1,6 +1,4 @@
-/**
- * storage.js - Capa de sincronización en tiempo real con Firebase Realtime Database
- */
+
 // URL EXACTA DE TU BASE DE DATOS FIREBASE:
 const URL_FIREBASE = "https://c4-monitoreo-8d236-default-rtdb.firebaseio.com";
 
