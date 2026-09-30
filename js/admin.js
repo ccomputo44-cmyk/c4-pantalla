@@ -1,7 +1,3 @@
-/**
- * admin.js - Panel de Administración Autónomo conectado a Firebase
- * Incluye capa de datos y sincronización en tiempo real sin dependencias externas
- */
 
 // URL DE TU BASE DE DATOS FIREBASE
 const URL_FIREBASE = "https://c4-monitoreo-8d236-default-rtdb.firebaseio.com";
