@@ -3,51 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acceso Administrativo • C4</title>
+  <title>Acceso Seguro • C4 Prevención Social</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../css/custom.css">
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 font-sans select-none">
-  <div class="panel-institucional rounded-2xl p-8 max-w-md w-full border border-slate-800 shadow-2xl">
-    <div class="text-center mb-6">
-      <div class="w-12 h-12 rounded-xl bg-sky-600/20 border border-sky-500/40 text-sky-400 flex items-center justify-center mx-auto mb-3 text-xl font-bold">
-        🛡️
+
+  <!-- TARJETA DE LOGIN -->
+  <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden backdrop-blur-md">
+    
+    <!-- ENCABEZADO CON LOGO OFICIAL -->
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-950 border-2 border-sky-500/50 p-2 flex items-center justify-center shadow-lg shadow-sky-500/10 overflow-hidden">
+        <img src="../logo.png" 
+             onerror="this.onerror=null; this.src='../logo.jpg'; this.onerror=function(){this.src='../logo.jpeg'; this.onerror=function(){this.src='../logo.PNG';}};" 
+             alt="Logo C4" 
+             class="w-full h-full object-contain">
       </div>
-      <h2 class="text-xl font-black text-white uppercase tracking-wider">Acceso a Gestión C4</h2>
-      <p class="text-xs text-sky-300/80 mt-1">Dirección de Prevención Social del Delito</p>
+      <h1 class="text-xl font-black uppercase tracking-wider text-white">CENTRO DE CONTROL Y MONITOREO C4</h1>
+      <p class="text-xs font-bold text-sky-400 mt-1 uppercase tracking-wide">Módulo de Acceso Administrativo</p>
     </div>
 
-    <form id="formLogin" class="space-y-4">
+    <!-- MENSAJE DE ERROR -->
+    <div id="mensajeError" class="hidden mb-4 p-3 bg-red-950/60 border border-red-500/50 rounded-xl text-center text-xs font-bold text-red-400">
+      Usuario o contraseña incorrectos.
+    </div>
+
+    <!-- FORMULARIO -->
+    <form onsubmit="manejarLogin(event)" class="space-y-5">
       <div>
-        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Usuario</label>
-        <input type="text" id="usuario" required placeholder="admin" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Usuario Operador</label>
+        <input type="text" id="inputUsuario" required autofocus autocomplete="off" placeholder="Ingresa usuario"
+               class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 outline-none transition-all">
       </div>
+
       <div>
-        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Contraseña</label>
-        <input type="password" id="password" required placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Contraseña de Seguridad</label>
+        <input type="password" id="inputPass" required placeholder="••••••••"
+               class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 outline-none transition-all">
       </div>
-      <div id="errorMsg" class="hidden text-xs text-red-400 text-center font-bold">Credenciales no válidas.</div>
-      <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-sky-600/30 uppercase tracking-wider">
-        Ingresar al Panel
+
+      <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-black text-sm uppercase tracking-wider py-3.5 rounded-xl shadow-lg shadow-sky-600/30 transition-all flex items-center justify-center gap-2">
+        <span>🔐</span> Iniciar Sesión
       </button>
-      <a href="../index.html" class="block text-center text-xs text-slate-500 hover:text-slate-300 mt-4 transition-all">
-        ← Volver a Pantalla de Monitoreo
-      </a>
     </form>
+
+    <!-- PIE -->
+    <div class="mt-6 text-center">
+      <a href="../index.html" class="text-xs text-slate-500 hover:text-slate-300 font-bold transition-all flex items-center justify-center gap-1">
+        <span>←</span> Volver al Monitor de TV
+      </a>
+    </div>
+
   </div>
 
   <script>
-    document.getElementById('formLogin').addEventListener('submit', (e) => {
+    function manejarLogin(e) {
       e.preventDefault();
-      const u = document.getElementById('usuario').value.trim();
-      const p = document.getElementById('password').value.trim();
-      if (u === 'admin' && (p === '1234' || p === 'c4tizayuca')) {
+      const u = document.getElementById('inputUsuario').value.trim();
+      const p = document.getElementById('inputPass').value.trim();
+      const error = document.getElementById('mensajeError');
+
+      // Credenciales institucionales estándar
+      if (u === 'admin' && p === '1234') {
         sessionStorage.setItem('c4_autenticado', 'true');
         window.location.href = 'dashboard.html';
       } else {
-        document.getElementById('errorMsg').classList.remove('hidden');
+        error.classList.remove('hidden');
       }
-    });
+    }
   </script>
 </body>
 </html>
