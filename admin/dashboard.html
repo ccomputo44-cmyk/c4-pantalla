@@ -25,7 +25,7 @@
 
     <div class="flex items-center gap-3">
       <a href="../index.html" class="bg-slate-800 hover:bg-slate-700 text-xs px-3.5 py-2 rounded-xl font-bold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-all shadow">
-        <span>📺</span> Ver Monitor de TV
+        <span>📺</span> Pantalla Principal
       </a>
       <button onclick="cerrarSesion()" class="bg-red-950 hover:bg-red-900 text-xs px-3.5 py-2 rounded-xl font-bold text-red-300 border border-red-700/80 transition-all shadow">
         Cerrar Sesión
@@ -35,10 +35,10 @@
 
   <main class="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
 
-    <!-- FORMULARIO DE CAPTURA MANUAL -->
+    <!-- FORMULARIO DE CAPTURA -->
     <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
       <h2 class="text-base font-black text-white uppercase tracking-wider mb-5 flex items-center gap-2">
-        <span>📋</span> CAPTURA MANUAL DE DESPLIEGUE OPERATIVO
+        <span>📋</span> CAPTURA MANUAL DE DATOS
       </h2>
 
       <form onsubmit="guardarActividad(event)" class="space-y-4">
@@ -57,25 +57,25 @@
           </div>
 
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Hora Inicio</label>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">HORA DE INICIO</label>
             <input type="time" id="inputInicio" required class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none font-mono">
           </div>
 
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Hora Término</label>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">HORA DE TERMINO</label>
             <input type="time" id="inputFin" required class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none font-mono">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Nombre de la Actividad / Consigna</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Nombre de la Actividad</label>
           <input type="text" id="inputNombre" required placeholder="Ej: Operativo Comercio Seguro"
                  class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 outline-none">
         </div>
 
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Descripción y Detalles</label>
-          <textarea id="inputDescripcion" rows="3" placeholder="Detalles de la consigna, sectores o corredores..."
+          <textarea id="inputDescripcion" rows="3" placeholder="Detalles del reporte..."
                     class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 outline-none"></textarea>
         </div>
 
@@ -111,12 +111,12 @@
       </div>
     </div>
 
-    <!-- MÓDULO DE EXPORTACIÓN (MENSUAL / POR DÍA) -->
+    <!-- MÓDULO DE EXPORTACIÓN (MENSUAL OH POR DÍA) -->
     <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
       <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-3">
         <div>
-          <h3 class="text-base font-black text-white uppercase tracking-wider">EXPORTACIÓN DE BITÁCORA Y REPORTES</h3>
-          <p class="text-xs text-slate-400 mt-0.5">Genera archivos oficiales con folio institucional compatibles con Microsoft Excel.</p>
+          <h3 class="text-base font-black text-white uppercase tracking-wider">EXPORTACIÓN DE DATOS ALMACENADOS</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Genera archivos automaticos con folio compatibles con Microsoft Excel.</p>
         </div>
       </div>
 
@@ -124,8 +124,8 @@
         <div class="md:col-span-4">
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Tipo de Reporte</label>
           <select id="tipoExportacion" onchange="alternarFiltroDia()" class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
-            <option value="todos">Reporte Completo / Mensual (Todo el histórico)</option>
-            <option value="diaSemana">Filtrar por Día de la Semana</option>
+            <option value="todos">Reporte General / Mensual </option>
+            <option value="diaSemana">Filtro por Día de la Semana</option>
             <option value="fechaEspecifica">Filtrar por Fecha Específica (AAAA-MM-DD)</option>
           </select>
         </div>
@@ -346,7 +346,7 @@
           return;
         }
 
-        // GENERACIÓN DE FOLIOS INSTITUCIONALES C4 (Ej: C4-20260930-0001)
+        // GENERACIÓN DE FOLIOS AUTOMATICOS C4 
         const cabeceras = ["FOLIO_INSTITUCIONAL", "FECHA_EVENTO", "DIA_SEMANA", "HORA_INICIO", "HORA_TERMINO", "ACTIVIDAD_CONSIGNA", "DETALLES_DESCRIPCION", "ESTATUS_OPERATIVO"];
         
         const lineas = resultadosFiltrados.map((r, index) => {
@@ -382,7 +382,7 @@
         document.body.removeChild(enlace);
 
       } catch (err) {
-        alert("Error al procesar la exportación: " + err.message);
+        alert("Error al procesar: " + err.message);
       } finally {
         btn.innerHTML = textoOriginal;
       }
