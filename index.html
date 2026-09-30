@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>C4 Monitoreo • Prevención Social del Delito</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/custom.css">
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none">
 
-  <!-- ENCABEZADO INSTITUCIONAL DE ALTO CONTRASTE -->
-  <header class="border-b border-slate-800/90 bg-slate-900/95 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+  <!-- ENCABEZADO -->
+  <header class="border-b border-slate-800 bg-slate-900/95 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-lg">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-lg bg-sky-600/20 border border-sky-500/40 flex items-center justify-center text-sky-400 text-xl font-bold">
         🛡️
@@ -31,19 +30,18 @@
     </div>
   </header>
 
-  <!-- CONTENEDOR PRINCIPAL: PANTALLA EXCLUSIVA DEL DÍA -->
+  <!-- CONTENEDOR PRINCIPAL -->
   <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
-    <!-- BANNER DEL DÍA CON RESALTADO -->
-    <div class="panel-institucional rounded-xl p-5 mb-6 border border-slate-800/90 flex flex-wrap items-center justify-between gap-4">
+    <div class="bg-slate-900/60 rounded-xl p-5 mb-6 border border-slate-800 flex flex-wrap items-center justify-between gap-4">
       <div>
         <h2 class="text-lg font-black text-white uppercase tracking-wider">
-          PROGRAMACIÓN DEL DÍA: <span class="text-sky-400 underline decoration-sky-500 decoration-2">HOY</span>
+          PROGRAMACIÓN OPERATIVA: <span id="textoDiaActual" class="text-sky-400 underline decoration-sky-500 decoration-2">HOY</span>
         </h2>
-        <p class="text-xs text-slate-400 mt-0.5">Despliegue operativo y preventivo asignado para el turno.</p>
+        <p class="text-xs text-slate-400 mt-0.5">Despliegue operativo y preventivo asignado en tiempo real.</p>
       </div>
       <div class="flex items-center gap-3 text-xs font-black">
         <span id="contadorTotalHoy" class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-200 font-mono">
-          ACTIVIDADES HOY: 0
+          ACTIVIDADES REGISTRADAS: 0
         </span>
         <span id="contadorEnVivoHoy" class="bg-red-950/80 border border-red-600/60 px-3 py-1.5 rounded-lg text-red-400 font-mono">
           EN CURSO: 0
@@ -51,37 +49,156 @@
       </div>
     </div>
 
-    <!-- CUADRÍCULA DE ACTIVIDADES DE HOY -->
-    <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <!-- CUADRÍCULA -->
+    <div id="gridActividades" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="col-span-full py-12 text-center text-slate-500">
+        <p class="animate-pulse">Cargando despliegue operativo del C4...</p>
+      </div>
+    </div>
   </main>
 
-  <!-- MODAL FLOTANTE MULTI-ALERTA CENTRADO -->
-  <div id="modalAlertas" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-950 border-2 border-red-500 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-        <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-red-500 animate-ping"></span>
-          <h3 class="text-base font-black text-red-400 uppercase tracking-wider">ALERTA DE DESPLIEGUE EN CURSO</h3>
-        </div>
-        <button onclick="cerrarTodasAlertas()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded font-bold border border-slate-700">
-          Minimizar todas [✕]
-        </button>
-      </div>
-      
-      <!-- Listado con scroll si hay muchas alertas simultáneas -->
-      <div id="listaAlertasEmergentes" class="space-y-4 max-h-[65vh] overflow-y-auto pr-1"></div>
-    </div>
-  </div>
+  <script>
+    const URL_FIREBASE = "https://c4-monitoreo-8d236-default-rtdb.firebaseio.com";
 
-  <!-- PASTILLA FLOTANTE INFERIOR PARA REABRIR SI SE MINIMIZARON -->
-  <div id="pastillaReabrir" class="hidden fixed bottom-6 right-6 z-40">
-    <button onclick="reabrirModalAlertas()" class="bg-red-600 hover:bg-red-500 text-white px-5 py-2.5 rounded-full font-black text-xs shadow-2xl flex items-center gap-2 border border-red-400/80 animate-bounce tracking-wider uppercase">
-      <span>🚨</span> <span id="conteoPastillaAlertas">Alertas Activas • Clic para ver</span>
-    </button>
-  </div>
+    function limpiarTexto(str) {
+      return (str || '')
+        .toString()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }
 
-  <script src="js/storage.js"></script>
-  <script src="js/audio.js"></script>
-  <script src="js/monitor.js"></script>
+    function obtenerNombreDia() {
+      const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      return dias[new Date().getDay()];
+    }
+
+    function tickReloj() {
+      const el = document.getElementById('relojDigital');
+      if (el) {
+        el.textContent = new Date().toLocaleTimeString('es-MX', { hour12: false });
+      }
+    }
+    setInterval(tickReloj, 1000);
+    tickReloj();
+
+    async function refrescarMonitor() {
+      const grid = document.getElementById('gridActividades');
+      const badgeTotal = document.getElementById('contadorTotalHoy');
+      const badgeEnCurso = document.getElementById('contadorEnVivoHoy');
+      const spanDia = document.getElementById('textoDiaActual');
+
+      const diaHoy = obtenerNombreDia();
+      const diaHoyLimpio = limpiarTexto(diaHoy);
+      if (spanDia) spanDia.textContent = diaHoy.toUpperCase();
+
+      try {
+        const respuesta = await fetch(`${URL_FIREBASE}/actividades.json`);
+        const data = await respuesta.json();
+
+        if (!data || Object.keys(data).length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full py-16 text-center text-slate-500 bg-slate-900/40 rounded-2xl border border-slate-800">
+              <p class="text-lg font-bold text-slate-400">No hay consignas registradas en la base de datos.</p>
+              <p class="text-xs text-slate-600 mt-2">Accede a Admin para agregar una nueva actividad.</p>
+            </div>`;
+          badgeTotal.textContent = "ACTIVIDADES REGISTRADAS: 0";
+          badgeEnCurso.textContent = "EN CURSO: 0";
+          return;
+        }
+
+        // Convertir y normalizar propiedades sin importar cómo las guardó el panel
+        const lista = Object.keys(data).map(k => {
+          const item = data[k];
+          return {
+            id: k,
+            dia: item.dia || item.diaSemana || item.dia_semana || 'Sin asignar',
+            inicio: item.inicio || item.horaInicio || item.hora_inicio || '00:00',
+            fin: item.fin || item.horaTermino || item.horaFin || item.hora_termino || '23:59',
+            nombre: item.nombre || item.actividad || item.nombreActividad || 'OPERATIVO',
+            descripcion: item.descripcion || item.detalles || 'Sin descripción detallada'
+          };
+        });
+
+        // Filtrar las de hoy
+        let actividadesAMostrar = lista.filter(item => limpiarTexto(item.dia) === diaHoyLimpio);
+
+        // Respaldo: si ninguna coincide exactamente con el día, muestra todas las de la semana
+        const sonTodas = actividadesAMostrar.length === 0;
+        if (sonTodas) {
+          actividadesAMostrar = lista;
+        }
+
+        const ahora = new Date();
+        const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
+        let enCursoCount = 0;
+
+        let cardsHtml = '';
+
+        actividadesAMostrar.forEach(act => {
+          const [hI, mI] = (act.inicio || '00:00').split(':').map(Number);
+          const [hF, mF] = (act.fin || '23:59').split(':').map(Number);
+          const minI = (hI * 60) + (mI || 0);
+          const minF = (hF * 60) + (mF || 0);
+
+          let estado = 'PROGRAMADO';
+          let borderStyle = 'border-slate-800 bg-slate-900/80';
+          let badgeStyle = 'bg-slate-800 text-slate-400 border border-slate-700';
+
+          const esMismoDia = limpiarTexto(act.dia) === diaHoyLimpio;
+
+          if (esMismoDia && minutosActuales >= minI && minutosActuales <= minF) {
+            estado = 'EN CURSO';
+            borderStyle = 'border-emerald-500 bg-slate-900 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/50';
+            badgeStyle = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 animate-pulse';
+            enCursoCount++;
+          } else if (esMismoDia && minutosActuales > minF) {
+            estado = 'CONCLUIDA';
+            borderStyle = 'border-slate-800/60 bg-slate-900/40 opacity-70';
+            badgeStyle = 'bg-slate-800/80 text-slate-500 border border-slate-800';
+          }
+
+          cardsHtml += `
+            <div class="rounded-2xl p-6 border ${borderStyle} flex flex-col justify-between transition-all">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono font-bold text-sky-400 bg-sky-950/70 px-3 py-1 rounded-lg border border-sky-800/50">
+                      🕒 ${act.inicio} - ${act.fin}
+                    </span>
+                    <span class="text-[11px] font-bold text-slate-300 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                      ${act.dia}
+                    </span>
+                  </div>
+                  <span class="text-[10px] font-black tracking-wider uppercase px-2.5 py-1 rounded-md ${badgeStyle}">
+                    ${estado}
+                  </span>
+                </div>
+                <h3 class="text-lg font-black text-white uppercase tracking-wide mb-2">${act.nombre}</h3>
+                <p class="text-xs text-slate-300 leading-relaxed">${act.descripcion}</p>
+              </div>
+            </div>
+          `;
+        });
+
+        grid.innerHTML = cardsHtml;
+        badgeTotal.textContent = `ACTIVIDADES REGISTRADAS: ${actividadesAMostrar.length}`;
+        badgeEnCurso.textContent = `EN CURSO: ${enCursoCount}`;
+
+      } catch (err) {
+        console.error("Error al consultar Firebase:", err);
+        grid.innerHTML = `
+          <div class="col-span-full p-4 text-center text-red-400 bg-red-950/30 border border-red-800 rounded-xl">
+            Error al sincronizar con Firebase: ${err.message}
+          </div>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      refrescarMonitor();
+      setInterval(refrescarMonitor, 4000);
+    });
+  </script>
 </body>
 </html>
