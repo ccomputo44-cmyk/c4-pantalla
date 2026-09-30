@@ -1,6 +1,4 @@
-/**
- * monitor.js - Controlador dinámico de la pantalla de TV de monitoristas
- */
+
 let alertasDescartadas = new Set();
 let ultimaMarcaRepique = 0;
 let actividadesEnVivoPrevias = new Set();
